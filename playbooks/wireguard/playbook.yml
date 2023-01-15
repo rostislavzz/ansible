@@ -1,0 +1,48 @@
+---
+- name: WireGuard
+  hosts: "*-wg"
+
+  tasks:
+    - name: Include vars
+      ansible.builtin.include_vars: ./wireguard/vars.yml
+    - name: Install packages
+      ansible.builtin.apt:
+        name:
+          - mc
+          - docker.io
+          - docker-compose
+        state: present
+        update_cache: true
+    - name: Add the user 'root' to the 'docker' group
+      ansible.builtin.user:
+        name: root
+        groups: docker
+        append: true
+    - name: Template a '.env' file for docker-compose
+      ansible.builtin.template:
+        src: ./wireguard/data/.env.j2
+        dest: ~/.env
+        mode: u=rw,g=r,o=r
+    - name: Copy 'docker-compose' file
+      ansible.builtin.copy:
+        src: ./wireguard/data/docker-compose.yml
+        dest: ~/docker-compose.yml
+        mode: u=rw,g=r,o=r
+    - name: Start services with docker-compose
+      community.docker.docker_compose:
+        project_src: ~/
+    - name: Show QR codes of peers
+      community.docker.docker_container_exec:
+        container: wireguard
+        command: "/app/show-peer {{ wireguard_peers | replace(',', ' ') }}"
+      register: qr_codes
+    - name: Print QR codes
+      ansible.builtin.debug:
+        var: qr_codes.stdout
+    - name: Create peer list
+      ansible.builtin.set_fact:
+        peers: "{{ wireguard_peers.split(',') | map('regex_replace', '(.+)', './docker-data/wireguard/config/peer_\\1/peer_\\1.conf') }}"
+    - name: Show peers conf
+      ansible.builtin.command: cat {{ item }}
+      loop: "{{ peers }}"
+...

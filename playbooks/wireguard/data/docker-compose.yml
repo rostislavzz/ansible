@@ -1,0 +1,28 @@
+version: "2.1"
+services:
+  duckdns:
+    image: lscr.io/linuxserver/duckdns:latest
+    container_name: duckdns
+    environment:
+      - TZ=${TZ}
+      - TOKEN=${DUCKDNS_TOKEN}
+      - SUBDOMAINS=${DUCKDNS_SUBDOMAINS}
+    restart: unless-stopped
+  wireguard:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - TZ=${TZ}
+      - PEERS=${WIREGUARD_PEERS}
+      - SERVERURL=${WIREGUARD_SERVERURL}
+      - PERSISTENTKEEPALIVE_PEERS=all
+    volumes:
+      - ./docker-data/wireguard/config:/config
+    ports:
+      - 51820:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
