@@ -1,10 +1,10 @@
 ---
 - name: WireGuard
-  hosts: "*-wg"
+  hosts: wireguard
 
   tasks:
     - name: Include vars
-      ansible.builtin.include_vars: ./wireguard/vars.yml
+      ansible.builtin.include_vars: ./vars.yml
     - name: Install packages
       ansible.builtin.apt:
         name:
@@ -20,12 +20,12 @@
         append: true
     - name: Template a '.env' file for docker-compose
       ansible.builtin.template:
-        src: ./wireguard/data/.env.j2
+        src: ./data/.env.j2
         dest: ~/.env
         mode: u=rw,g=r,o=r
     - name: Copy 'docker-compose' file
       ansible.builtin.copy:
-        src: ./wireguard/data/docker-compose.yml
+        src: ./data/docker-compose.yml
         dest: ~/docker-compose.yml
         mode: u=rw,g=r,o=r
     - name: Start services with docker-compose
