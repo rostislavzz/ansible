@@ -11,5 +11,5 @@ docker run -v $PWD/roles/openvpn/files/data:/etc/openvpn --rm -it kylemanna/open
 
 Retrieve the client configuration with embedded certificates
 ```
-docker run -v $PWD/roles/openvpn/files/data:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient CLIENTNAME > CLIENTNAME.ovpn
+docker run -v $PWD/roles/openvpn/files/data:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient CLIENTNAME > $PWD/roles/openvpn/files/clients/CLIENTNAME.ovpn
 ```

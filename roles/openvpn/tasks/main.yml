@@ -12,20 +12,6 @@
     command: ovpn_copy_server_files
   delegate_to: localhost
 
-- name: Copy OpenVPN issued certificates
-  ansible.builtin.copy:
-    src: ./roles/openvpn/files/data/pki/issued
-    dest: ./roles/openvpn/files/data/server/pki
-    mode: u=rw,g=r,o=r
-  delegate_to: localhost
-
-- name: Copy OpenVPN private keys
-  ansible.builtin.copy:
-    src: ./roles/openvpn/files/data/pki/private
-    dest: ./roles/openvpn/files/data/server/pki
-    mode: u=rw,g=r,o=r
-  delegate_to: localhost
-
 - name: Archive OpenVPN config
   community.general.archive:
     path: $PWD/roles/openvpn/files/data/server
@@ -52,6 +38,11 @@
 
 - name: Extract data to the volume
   ansible.builtin.shell: "xzcat openvpn-backup.tar.xz | docker run -v {{ data_volume_name }}:/etc/openvpn --rm -i kylemanna/openvpn tar --strip-components=1 -xvf - -C /etc/openvpn"
+
+- name: Remove OpenVPN config
+  ansible.builtin.file:
+    path: ~/openvpn-backup.tar.xz
+    state: absent
 
 - name: Start OpenVPN container
   community.docker.docker_container:
