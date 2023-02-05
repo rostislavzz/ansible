@@ -1,0 +1,9 @@
+---
+- name: Start DuckDNS container
+  community.docker.docker_container:
+    name: duckdns
+    image: lscr.io/linuxserver/duckdns:latest
+    env:
+      TZ: "{{ timezone }}"
+      TOKEN: "{{ duckdns_token }}"
+      SUBDOMAINS: "{{ duckdns_subdomain }}"

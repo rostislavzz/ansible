@@ -1,9 +1,6 @@
 # ansible
 
-## playbooks/wireguard
-
-Installs DuckDns and Wireguard in docker
-
-```bash
-ansible-playbook playbooks/wireguard/playbook.yml -i hosts
+Install OpenVNP in docker
+```
+ansible-playbook openvpn-playbook.yml -vv
 ```

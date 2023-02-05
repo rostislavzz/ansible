@@ -1,0 +1,65 @@
+---
+- name: Put all the needed files fo the server in a subdirectory
+  community.docker.docker_container:
+    name: openvpn
+    image: kylemanna/openvpn
+    volumes:
+      - ./roles/openvpn/files/data:/etc/openvpn
+    auto_remove: true
+    network_mode: none
+    tty: true
+    interactive: true
+    command: ovpn_copy_server_files
+  delegate_to: localhost
+
+- name: Copy OpenVPN issued certificates
+  ansible.builtin.copy:
+    src: ./roles/openvpn/files/data/pki/issued
+    dest: ./roles/openvpn/files/data/server/pki
+    mode: u=rw,g=r,o=r
+  delegate_to: localhost
+
+- name: Copy OpenVPN private keys
+  ansible.builtin.copy:
+    src: ./roles/openvpn/files/data/pki/private
+    dest: ./roles/openvpn/files/data/server/pki
+    mode: u=rw,g=r,o=r
+  delegate_to: localhost
+
+- name: Archive OpenVPN config
+  community.general.archive:
+    path: $PWD/roles/openvpn/files/data/server
+    dest: $PWD/roles/openvpn/files/openvpn-backup.tar.xz
+    mode: u=rw,g=r,o=r
+    format: xz
+  delegate_to: localhost
+
+- name: Copy OpenVPN config to the server
+  ansible.builtin.copy:
+    src: ./files/openvpn-backup.tar.xz
+    dest: ~/
+    mode: u=rw,g=r,o=r
+
+- name: Remove OpenVPN container
+  community.docker.docker_container:
+    name: openvpn
+    state: absent
+
+- name: Create docker volume
+  community.docker.docker_volume:
+    volume_name: "{{ data_volume_name }}"
+    recreate: always
+
+- name: Extract data to the volume
+  ansible.builtin.shell: "xzcat openvpn-backup.tar.xz | docker run -v {{ data_volume_name }}:/etc/openvpn --rm -i kylemanna/openvpn tar --strip-components=1 -xvf - -C /etc/openvpn"
+
+- name: Start OpenVPN container
+  community.docker.docker_container:
+    name: openvpn
+    image: kylemanna/openvpn
+    volumes:
+      - "{{ data_volume_name }}:/etc/openvpn"
+    ports:
+      - "1194:1194/udp"
+    capabilities:
+      - NET_ADMIN

@@ -1,0 +1,13 @@
+---
+- name: Install packages
+  ansible.builtin.apt:
+    name:
+      - docker.io
+      - docker-compose
+    state: present
+    update_cache: true
+
+- name: Autoremove and clean packages
+  ansible.builtin.apt:
+    autoremove: true
+    clean: true
