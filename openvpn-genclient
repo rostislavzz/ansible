@@ -1,0 +1,6 @@
+#!/bin/bash
+
+CLIENTNAME=$1
+
+docker run --net=none --rm -t -i -v $PWD/roles/openvpn/files/data:/etc/openvpn kylemanna/openvpn easyrsa build-client-full $CLIENTNAME nopass
+docker run --net=none --rm -v $PWD/roles/openvpn/files/data:/etc/openvpn kylemanna/openvpn ovpn_getclient $CLIENTNAME > $PWD/roles/openvpn/files/clients/CLIENTNAME.ovpn

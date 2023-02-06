@@ -1,4 +1,4 @@
-# ansible
+# Ansible playbooks
 
 ## OpenVPN
 Generate the CA and all certificates.
@@ -7,14 +7,9 @@ Generate the CA and all certificates.
 ./openvpn-initpki
 ```
 
-Generate a client certificate without a passphrase
+Generate a client certificate without a passphrase and retrieve configuration with embedded certificates.
 ```
-docker run -v $PWD/roles/openvpn/files/data:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full CLIENTNAME nopass
-```
-
-Retrieve the client configuration with embedded certificates
-```
-docker run -v $PWD/roles/openvpn/files/data:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient CLIENTNAME > $PWD/roles/openvpn/files/clients/CLIENTNAME.ovpn
+./openvpn-genclient
 ```
 
 Install and upload updated OpenVNP config to remote server.
