@@ -1,0 +1,18 @@
+#!/bin/bash
+
+while getopts u: flag
+do
+    case "${flag}" in
+        u)
+            SERVER_PUBLIC_URL=${OPTARG}
+            ;;
+    esac
+done
+
+PUSH_ROUTE_CONFIG=$(<openvpn-route.add.conf)
+
+docker run --net=none --rm -t -i -v $PWD/roles/openvpn/files/data-test:/etc/openvpn kylemanna/openvpn ovpn_genconfig \
+  -u $SERVER_PUBLIC_URL \
+  -C 'AES-256-CBC' \
+  -a 'SHA384' \
+  -p "$PUSH_ROUTE_CONFIG"
