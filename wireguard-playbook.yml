@@ -1,0 +1,21 @@
+---
+- name: WireGuard
+  hosts: wireguard
+
+  vars:
+    docker_dir: ~/docker-data
+    duckdns_token:
+    duckdns_subdomain:
+    wireguard_host:
+    wireguard_password:
+
+  pre_tasks:
+    - name: Include vault
+      ansible.builtin.include_vars:
+        file: prod.vault.yml
+
+  roles:
+    - role: docker
+    - role: duckdns
+    - role: wireguard
+...
