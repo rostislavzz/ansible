@@ -1,0 +1,18 @@
+---
+- name: OpenVPN
+  hosts: openvpn
+
+  vars:
+    duckdns_token:
+    duckdns_subdomain: yet-another-server
+
+  pre_tasks:
+    - name: Include vault
+      ansible.builtin.include_vars:
+        file: prod.vault.yml
+
+  roles:
+    - role: docker
+    - role: duckdns
+    - role: openvpn
+...

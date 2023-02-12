@@ -1,1 +1,2 @@
-data_volume_name: ovpn-data
+openvpn_volume_name: ovpn-data
+openvpn_port: 1194

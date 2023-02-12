@@ -3,6 +3,7 @@
   community.docker.docker_container:
     name: openvpn
     image: kylemanna/openvpn
+    pull: true
     volumes:
       - ./roles/openvpn/files/data:/etc/openvpn
     auto_remove: true
@@ -33,24 +34,27 @@
 
 - name: Create docker volume
   community.docker.docker_volume:
-    volume_name: "{{ data_volume_name }}"
+    volume_name: "{{ openvpn_volume_name }}"
     recreate: always
 
 - name: Extract data to the volume
-  ansible.builtin.shell: "xzcat openvpn-backup.tar.xz | docker run -v {{ data_volume_name }}:/etc/openvpn --rm -i kylemanna/openvpn tar --strip-components=1 -xvf - -C /etc/openvpn"
+  ansible.builtin.shell: "xzcat openvpn-backup.tar.xz | docker run -v {{ openvpn_volume_name }}:/etc/openvpn --rm -i kylemanna/openvpn tar --strip-components=1 -xvf - -C /etc/openvpn"
 
 - name: Remove OpenVPN config
   ansible.builtin.file:
     path: ~/openvpn-backup.tar.xz
     state: absent
 
-- name: Start OpenVPN container
+- name: Start the OpenVPN container
   community.docker.docker_container:
     name: openvpn
     image: kylemanna/openvpn
+    pull: true
+    state: started
+    restart_policy: unless-stopped
     volumes:
-      - "{{ data_volume_name }}:/etc/openvpn"
+      - "{{ openvpn_volume_name }}:/etc/openvpn"
     ports:
-      - "1194:1194/udp"
+      - "{{ openvpn_port }}:1194/udp"
     capabilities:
       - NET_ADMIN

@@ -11,7 +11,7 @@ done
 
 PUSH_ROUTE_CONFIG=$(<openvpn-route.add.conf)
 
-docker run --net=none --rm -t -i -v $PWD/roles/openvpn/files/data-test:/etc/openvpn kylemanna/openvpn ovpn_genconfig \
+docker run --net=none --rm -t -i -v $PWD/roles/openvpn/files/data:/etc/openvpn kylemanna/openvpn ovpn_genconfig \
   -u $SERVER_PUBLIC_URL \
   -C 'AES-256-CBC' \
   -a 'SHA384' \
