@@ -1,0 +1,43 @@
+---
+- name: Create the Traefik network
+  community.docker.docker_network:
+    name: "{{ traefik_network_name }}"
+
+- name: Start the Traefik container
+  community.docker.docker_container:
+    name: traefik
+    image: traefik:2.9
+    pull: true
+    state: started
+    restart_policy: unless-stopped
+    command:
+      - "--providers.docker"
+      - "--providers.docker.network={{ traefik_network_name }}"
+      - "--providers.docker.exposedByDefault=false"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.websecure.http.tls.certResolver=myresolver"
+      - "--entrypoints.websecure.http.tls.domains[0].main={{ traefik_domain }}"
+      - "--entrypoints.websecure.http.tls.domains[0].sans=*.{{ traefik_domain }}"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=duckdns"
+      - "--certificatesresolvers.myresolver.acme.email={{ traefik_acme_email }}"
+    env:
+      "DUCKDNS_TOKEN": "{{ traefik_duckdns_token }}"
+    ports:
+      - "443:443/tcp"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - name: "{{ traefik_network_name }}"
+
+- name: Start the Whoami container
+  community.docker.docker_container:
+    name: whoami
+    image: traefik/whoami
+    pull: true
+    state: started
+    restart_policy: unless-stopped
+    labels:
+      "traefik.enable": "true"
+      "traefik.http.routers.whoami.rule": "Host(`whoami.{{ traefik_domain }}`)"
+    networks:
+      - name: "{{ traefik_network_name }}"

@@ -18,6 +18,11 @@
       "WG_PERSISTENT_KEEPALIVE": "25"
     ports:
       - "{{ wireguard_port }}:51820/udp"
-      - "51821:51821/tcp"
     volumes:
       - "{{ docker_dir }}/wireguard:/etc/wireguard"
+    labels:
+      "traefik.enable": "true"
+      "traefik.http.routers.wireguard.rule": "Host(`wg.{{ traefik_domain }}`)"
+      "traefik.http.services.wireguard.loadbalancer.server.port": "51821"
+    networks:
+      - name: "{{ traefik_network_name }}"

@@ -11,3 +11,10 @@
   ansible.builtin.apt:
     autoremove: true
     clean: true
+
+- name: Make sure Docker is running and enabled
+  ansible.builtin.systemd:
+    name: docker
+    daemon_reload: true
+    state: started
+    enabled: true
