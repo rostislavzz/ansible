@@ -1,0 +1,30 @@
+---
+# https://hamy.io/post/0009/how-to-install-luks-encrypted-ubuntu-18.04.x-server-and-enable-remote-unlocking/
+
+- name: Install dropbear-initramfs package
+  ansible.builtin.apt:
+    name:
+      - dropbear-initramfs
+    update_cache: true
+  become: true
+
+- name: Run Dropbear SSH on a different port
+  ansible.builtin.lineinfile:
+    path: /etc/dropbear-initramfs/config
+    regexp: 'DROPBEAR_OPTIONS'
+    # -p Listen on specified address and TCP port
+    # -s Disable password logins
+    # -j Disable local port forwarding
+    # -k Disable remote port forwarding
+    # -I Disconnect the session if no traffic is transmitted or received for idle_timeout seconds
+    line: 'DROPBEAR_OPTIONS="-p 222 -s -j -k -I 60"'
+  notify: ['Update initramfs']
+  become: true
+
+- name: Set authorized key taken from file
+  ansible.posix.authorized_key:
+    user: root
+    key: "{{ lookup('file', '/Users/rostislav/.ssh/id_rsa.pub') }}"
+    path: /etc/dropbear-initramfs/authorized_keys
+  notify: ['Update initramfs']
+  become: true

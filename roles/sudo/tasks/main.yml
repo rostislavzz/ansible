@@ -1,0 +1,28 @@
+---
+- name: Install Sudo package
+  ansible.builtin.apt:
+    name:
+      - sudo
+    update_cache: true
+  become: true
+  become_user: root
+  become_method: su
+
+- name: Add the user to sudo group
+  ansible.builtin.user:
+    name: "{{ sudo_user }}"
+    groups: sudo
+    append: true
+  become: true
+  become_user: root
+  become_method: su
+
+- name: Allow sudo_user to sudo
+  community.general.sudoers:
+    name: "{{ sudo_user }}"
+    user: "{{ sudo_user }}"
+    runas: root
+    commands: ALL
+  become: true
+  become_user: root
+  become_method: su

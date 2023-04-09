@@ -1,0 +1,17 @@
+---
+- name: Proxmox
+  hosts: rock
+
+  vars:
+    authorized_key_user:
+    sudo_user:
+    proxmox_ip: 192.168.51.60
+    proxmox_host: rock
+
+  roles:
+    - role: authorized_key
+    - role: sudo
+    - role: dropbear-initramfs
+    - role: proxmox6
+    - role: proxmox6-igpu-passthrough
+...

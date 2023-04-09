@@ -1,0 +1,8 @@
+---
+- name: Set authorized key taken from file
+  ansible.posix.authorized_key:
+    user: "{{ authorized_key_user }}"
+    key: "{{ lookup('file', '/Users/rostislav/.ssh/id_rsa.pub') }}"
+  become: true
+  become_user: root
+  become_method: su
