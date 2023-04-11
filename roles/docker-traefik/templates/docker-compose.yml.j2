@@ -1,0 +1,35 @@
+version: '2.1'
+
+services:
+  jackett:
+    image: traefik:2.9
+    container_name: traefik
+    restart: unless-stopped
+    networks:
+      - {{ traefik_network_name }}
+    ports:
+      - "80:80"
+{% if traefik_duckdns_token|length > 1 %}
+    environment:
+      - DUCKDNS_TOKEN={{ traefik_duckdns_token }}
+{% endif %}
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    command:
+      - "--providers.docker"
+      - "--providers.docker.network={{ traefik_network_name }}"
+      - "--providers.docker.exposedByDefault=false"
+
+  whoami:
+    image: traefik/whoami
+    container_name: whoami
+    restart: unless-stopped
+    networks:
+      - {{ traefik_network_name }}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.whoami.rule=Host(`whoami.{{ traefik_domain }}`)
+
+networks:
+  traefik:
+    external: true

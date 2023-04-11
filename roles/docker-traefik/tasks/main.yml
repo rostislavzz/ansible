@@ -1,0 +1,20 @@
+---
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ docker_apps_dir }}/traefik"
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+
+- name: Template a 'docker-compose.yml' file
+  ansible.builtin.template:
+    src: ./roles/docker-traefik/templates/docker-compose.yml.j2
+    dest: "{{ docker_apps_dir }}/traefik/docker-compose.yml"
+    mode: "0644"
+
+- name: Create the Traefik network
+  community.docker.docker_network:
+    name: "{{ traefik_network_name }}"
+
+- name: Start Traefik with docker-compose
+  community.docker.docker_compose:
+    project_src: "{{ docker_apps_dir }}/traefik/"
