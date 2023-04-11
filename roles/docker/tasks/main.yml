@@ -18,3 +18,11 @@
     daemon_reload: true
     state: started
     enabled: true
+
+- name: Add the user 'docker'
+  ansible.builtin.user:
+    name: docker
+    comment: Docker Apps User
+    create_home: false
+    uid: "{{ docker_uid }}"
+    groups: users,docker
