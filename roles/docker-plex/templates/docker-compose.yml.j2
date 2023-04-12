@@ -1,0 +1,20 @@
+version: "2.1"
+
+services:
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    environment:
+      - TZ={{ timezone }}
+      - PUID={{ docker_uid }}
+      - PGID={{ docker_gid }}
+      - VERSION={{ plex_version }}
+      - PLEX_CLAIM={{ plex_claim }}
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - {{ docker_apps_dir }}/plex/data/config:/config
+      - {{ docker_apps_dir }}/plex/data/media:/data
