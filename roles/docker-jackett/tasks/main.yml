@@ -1,0 +1,26 @@
+---
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ docker_apps_dir }}/jackett"
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+
+- name: Get docker user info
+  ansible.builtin.user:
+    name: docker
+  register: user
+
+- name: Set variables
+  ansible.builtin.set_fact:
+    docker_uid: "{{ user.uid }}"
+    docker_gid: "{{ user.group }}"
+
+- name: Template a 'docker-compose.yml' file
+  ansible.builtin.template:
+    src: ./roles/docker-jackett/templates/docker-compose.yml.j2
+    dest: "{{ docker_apps_dir }}/jackett/docker-compose.yml"
+    mode: "0644"
+
+- name: Start Jackett with docker-compose
+  community.docker.docker_compose:
+    project_src: "{{ docker_apps_dir }}/jackett/"

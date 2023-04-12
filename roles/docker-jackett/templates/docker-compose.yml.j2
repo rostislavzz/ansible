@@ -1,0 +1,24 @@
+version: "2.1"
+
+services:
+  jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: jackett
+    restart: unless-stopped
+    networks:
+      - {{ traefik_network_name }}
+    environment:
+      - TZ={{ timezone }}
+      - PUID={{ docker_uid }}
+      - PGID={{ docker_gid }}
+    volumes:
+      - {{ docker_apps_dir }}/jackett/data/config:/config
+      - {{ docker_apps_dir }}/jackett/data/downloads:/downloads
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.jackett.rule=Host(`jackett.{{ traefik_domain }}`)
+      - traefik.http.services.jackett.loadbalancer.server.port=9117
+
+networks:
+  traefik:
+    external: true
