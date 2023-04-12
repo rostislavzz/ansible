@@ -1,0 +1,5 @@
+timezone: Europe/Moscow
+traefik_domain:
+traefik_network_name: traefik
+transmission_user: admin
+transmission_pass:

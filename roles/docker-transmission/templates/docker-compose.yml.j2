@@ -1,0 +1,30 @@
+version: "2.1"
+
+services:
+  transmission:
+    image: lscr.io/linuxserver/transmission:version-3.00-r8
+    container_name: transmission
+    restart: unless-stopped
+    networks:
+      - {{ traefik_network_name }}
+    ports:
+      - 51413:51413
+      - 51413:51413/udp
+    environment:
+      - TZ={{ timezone }}
+      - PUID={{ docker_uid }}
+      - PGID={{ docker_gid }}
+      - USER={{ transmission_user }}
+      - PASS={{ transmission_pass }}
+    volumes:
+      - {{ docker_apps_dir }}/transmission/data/config:/config
+      - {{ docker_apps_dir }}/transmission/data/watch:/watch
+      - {{ docker_apps_dir }}/transmission/data/downloads:/downloads
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.transmission.rule=Host(`transmission.{{ traefik_domain }}`)
+      - traefik.http.services.transmission.loadbalancer.server.port=9091
+
+networks:
+  traefik:
+    external: true
