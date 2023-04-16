@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{ docker_apps_dir }}/traefik"
     state: directory
-    mode: u=rwx,g=rx,o=rx
+    mode: "0755"
 
 - name: Template a 'docker-compose.yml' file
   ansible.builtin.template:

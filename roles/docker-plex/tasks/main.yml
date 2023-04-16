@@ -20,6 +20,7 @@
     src: ./roles/docker-plex/templates/docker-compose.yml.j2
     dest: "{{ docker_apps_dir }}/plex/docker-compose.yml"
     mode: "0644"
+    force: false
 
 - name: Start Plex with docker-compose
   community.docker.docker_compose:

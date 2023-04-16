@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{ docker_apps_dir }}/jackett"
     state: directory
-    mode: u=rwx,g=rx,o=rx
+    mode: "0755"
 
 - name: Get docker user info
   ansible.builtin.user:
