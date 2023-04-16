@@ -1,0 +1,21 @@
+version: "2.1"
+
+services:
+  monitorrent:
+    image: werwolfby/monitorrent:1.3.0
+    container_name: monitorrent
+    restart: unless-stopped
+    networks:
+      - {{ traefik_network_name }}
+    environment:
+      - MONITORRENT_DB_PATH=/config/monitorrent.db
+    volumes:
+      - {{ docker_apps_dir }}/monitorrent/data/config:/config
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.monitorrent.rule=Host(`monitorrent.{{ traefik_domain }}`)
+      - traefik.http.services.monitorrent.loadbalancer.server.port=6687
+
+networks:
+  traefik:
+    external: true
