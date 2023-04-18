@@ -1,5 +1,5 @@
 ---
-- name: Create a plex directory if it does not exist
+- name: Create a Plex directory if it does not exist
   ansible.builtin.file:
     path: "{{ docker_apps_dir }}/plex"
     state: directory
