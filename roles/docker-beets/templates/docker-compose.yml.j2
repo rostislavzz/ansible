@@ -1,0 +1,23 @@
+version: "2.1"
+
+services:
+  beets:
+    image: lscr.io/linuxserver/beets:latest
+    container_name: beets
+    restart: unless-stopped
+    networks:
+      - {{ traefik_network_name }}
+    environment:
+      - TZ={{ timezone }}
+      - PUID={{ docker_uid }}
+      - PGID={{ docker_gid }}
+    volumes:
+      - {{ docker_apps_dir }}/beets/data/config:/config
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.beets.rule=Host(`beets.{{ traefik_domain }}`)
+      - traefik.http.services.beets.loadbalancer.server.port=8337
+
+networks:
+  traefik:
+    external: true
