@@ -1,0 +1,12 @@
+---
+- name: Set loadavg 1 min
+  ansible.builtin.command: "omv-env set -- OMV_MONIT_SERVICE_SYSTEM_LOADAVG_1MIN_MULT {{ loadavg_1min }}"
+  become: true
+  changed_when: true
+  notify: ['Monit restart', 'OMV salt prepare', 'OMV salt deploy']
+
+- name: Set loadavg 5 min
+  ansible.builtin.command: "omv-env set -- OMV_MONIT_SERVICE_SYSTEM_LOADAVG_5MIN_MULT {{ loadavg_5min }}"
+  become: true
+  changed_when: true
+  notify: ['Monit restart', 'OMV salt prepare', 'OMV salt deploy']

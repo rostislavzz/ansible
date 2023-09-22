@@ -1,0 +1,15 @@
+---
+- name: Monit restart
+  become: true
+  ansible.builtin.command: monit restart omv-engined
+  changed_when: true
+
+- name: OMV salt prepare
+  become: true
+  ansible.builtin.command: omv-salt stage run prepare
+  changed_when: true
+
+- name: OMV salt deploy
+  become: true
+  ansible.builtin.command: omv-salt stage run deploy
+  changed_when: true
