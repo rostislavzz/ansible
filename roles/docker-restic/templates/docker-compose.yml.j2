@@ -1,0 +1,50 @@
+version: "3.5"
+
+services:
+  restic-backup:
+    image: mazzolino/restic
+    container_name: restic-backup
+    restart: unless-stopped
+    environment:
+      - BACKUP_CRON={{ restic_backup_cron }}
+      - RUN_ON_STARTUP=false
+      - AWS_ACCESS_KEY_ID={{ aws_access_key_id }}
+      - AWS_SECRET_ACCESS_KEY={{ aws_secret_access_key }}
+      - RESTIC_BACKUP_ARGS={{ restic_backup_args }}
+      - RESTIC_FORGET_ARGS={{ restic_forget_args }}
+      - RESTIC_PASSWORD={{ restic_password }}
+      - RESTIC_REPOSITORY={{ restic_repository }}
+      - TZ={{ timezone }}
+    volumes:
+      {% for volume in restic_backup_volumes -%}
+        - {{ volume }}
+      {%- endfor %}
+
+
+  restic-prune:
+    image: mazzolino/restic
+    container_name: restic-prune
+    restart: unless-stopped
+    environment:
+      - PRUNE_CRON={{ restic_prune_cron }}
+      - RUN_ON_STARTUP=false
+      - AWS_ACCESS_KEY_ID={{ aws_access_key_id }}
+      - AWS_SECRET_ACCESS_KEY={{ aws_secret_access_key }}
+      - RESTIC_PASSWORD={{ restic_password }}
+      - RESTIC_REPOSITORY={{ restic_repository }}
+      - RESTIC_PRUNE_ARGS={{ restic_prune_args }}
+      - TZ={{ timezone }}
+
+  restic-check:
+    image: mazzolino/restic
+    container_name: restic-check
+    restart: unless-stopped
+    environment:
+      - CHECK_CRON={{ restic_check_cron }}
+      - RUN_ON_STARTUP=false
+      - AWS_ACCESS_KEY_ID={{ aws_access_key_id }}
+      - AWS_SECRET_ACCESS_KEY={{ aws_secret_access_key }}
+      - RESTIC_PASSWORD={{ restic_password }}
+      - RESTIC_REPOSITORY={{ restic_repository }}
+      - RESTIC_CHECK_ARGS={{ restic_check_args }}
+      - TZ={{ timezone }}

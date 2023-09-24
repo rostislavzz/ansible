@@ -1,0 +1,12 @@
+restic_backup_cron: 0 0 1 1 * *
+restic_prune_cron: 0 0 3 1 * *
+restic_check_cron: 0 0 4 1 * *
+aws_access_key_id:
+aws_secret_access_key:
+restic_password:
+restic_repository:
+restic_backup_args: --compression max
+restic_forget_args: --keep-monthly 6
+restic_prune_args: --verbose
+restic_check_args: --read-data-subset=10%
+restic_backup_volumes:

@@ -32,4 +32,8 @@
     - role: docker-photoprism
       vars:
         docker_apps_dir: /srv/storage/docker-data
+    - role: docker-restic
+      vars:
+        restic_backup_volumes:
+          - /srv/storage/docker-data/photoprism:/data/photoprism:ro
 ...
