@@ -6,11 +6,13 @@
       - docker-compose
     state: present
     update_cache: true
+  become: true
 
 - name: Autoremove and clean packages
   ansible.builtin.apt:
     autoremove: true
     clean: true
+  become: true
 
 - name: Make sure Docker is running and enabled
   ansible.builtin.systemd:
@@ -18,6 +20,7 @@
     daemon_reload: true
     state: started
     enabled: true
+  become: true
 
 - name: Add the user 'docker'
   ansible.builtin.user:
@@ -26,3 +29,4 @@
     create_home: false
     uid: "{{ docker_uid }}"
     groups: users,docker
+  become: true

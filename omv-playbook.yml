@@ -1,0 +1,35 @@
+---
+- name: OpenMediaVault
+  hosts: openmediavault
+
+  vars:
+    docker_apps_dir: /srv/docker
+    traefik_domain: omv.home
+
+  pre_tasks:
+    - name: Include vault
+      ansible.builtin.include_vars:
+        file: prod.vault.yml
+
+  roles:
+    - role: authorized-key
+    - role: omv-extras
+    - role: omv-monitoring-alert
+    - role: docker
+    - role: docker-traefik
+    - role: docker-transmission
+      vars:
+        transmission_pass:
+    - role: docker-jackett
+    - role: docker-radarr
+    - role: docker-recyclarr
+    - role: docker-plex
+      vars:
+        plex_claim: claim-6eJ3-SADUzcCgyRHesHb
+    - role: docker-tautulli
+    - role: docker-monitorrent
+    - role: docker-beets
+    - role: docker-photoprism
+      vars:
+        docker_apps_dir: /srv/storage/docker-data
+...

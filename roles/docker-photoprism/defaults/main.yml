@@ -1,0 +1,10 @@
+photoprism_admin_user:
+photoprism_admin_password:
+photoprism_auth_mode: public
+photoprism_site_url:
+photoprism_disable_tls: true
+photoprism_default_tls: false
+photoprism_database_driver: mysql
+photoprism_database_name: photoprism
+photoprims_database_user: photoprism
+photoprism_database_password:
