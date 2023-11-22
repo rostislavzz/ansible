@@ -1,0 +1,7 @@
+---
+- name: Proxmox VE 7
+  hosts: rock
+
+  roles:
+    - role: proxmox7-gpu-passthrough
+...

@@ -3,6 +3,6 @@
   ansible.posix.authorized_key:
     user: "{{ authorized_key_user }}"
     key: "{{ lookup('file', '/Users/rostislav/.ssh/id_rsa.pub') }}"
-  become: true
-  become_user: root
-  become_method: su
+
+- name: Reset ssh connection to allow user changes to affect 'current login user'
+  ansible.builtin.meta: reset_connection

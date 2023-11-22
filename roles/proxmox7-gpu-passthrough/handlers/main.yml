@@ -1,0 +1,8 @@
+---
+- name: Update grub
+  ansible.builtin.command: update-grub
+  become: true
+
+- name: Update initramfs
+  become: true
+  ansible.builtin.command: update-initramfs -u -k all
