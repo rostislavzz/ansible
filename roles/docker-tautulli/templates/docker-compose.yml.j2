@@ -1,0 +1,26 @@
+version: "2.1"
+
+services:
+  tautulli:
+    image: lscr.io/linuxserver/tautulli:latest
+    container_name: tautulli
+    restart: unless-stopped
+    networks:
+      - {{ traefik_network_name }}
+    ports:
+      - 8181:8181
+    environment:
+      - TZ={{ timezone }}
+      - PUID={{ docker_uid }}
+      - PGID={{ docker_gid }}
+    volumes:
+      - {{ docker_apps_dir }}/tautulli/data/config:/config
+      - {{ docker_apps_dir }}/plex/data/config/Library/Application Support/Plex Media Server/Logs:/plex-logs
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.tautulli.rule=Host(`tautulli.{{ traefik_domain }}`)
+      - traefik.http.services.tautulli.loadbalancer.server.port=8181
+
+networks:
+  traefik:
+    external: true

@@ -1,10 +1,4 @@
 ---
-# Proxmox for iGPU Full Passthrough
-# https://pve.proxmox.com/wiki/PCI_Passthrough
-# https://pve.proxmox.com/wiki/PCI(e)_Passthrough
-# https://3os.org/infrastructure/proxmox/gpu-passthrough/igpu-passthrough-to-vm/
-# https://cetteup.com/216/how-to-use-an-intel-vgpu-for-plexs-hardware-accelerated-streaming-in-a-proxmox-vm/
-
 - name: Edit the grub configuration file
   ansible.builtin.lineinfile:
     backup: true

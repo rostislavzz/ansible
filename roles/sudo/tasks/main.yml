@@ -6,7 +6,7 @@
     update_cache: true
   become: true
   become_user: root
-  become_method: su
+  become_method: ansible.builtin.su
 
 - name: Add the user to sudo group
   ansible.builtin.user:
@@ -15,7 +15,7 @@
     append: true
   become: true
   become_user: root
-  become_method: su
+  become_method: ansible.builtin.su
 
 - name: Allow sudo_user to sudo
   community.general.sudoers:
@@ -25,4 +25,4 @@
     commands: ALL
   become: true
   become_user: root
-  become_method: su
+  become_method: ansible.builtin.su

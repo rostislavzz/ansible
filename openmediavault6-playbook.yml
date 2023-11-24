@@ -1,0 +1,8 @@
+---
+- name: OpenMediaVault 6
+  hosts: openmediavault6
+
+  roles:
+    - role: authorized-key
+    - role: docker
+...

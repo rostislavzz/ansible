@@ -2,9 +2,7 @@
 - name: Install packages
   ansible.builtin.apt:
     name:
-      - docker.io
-      - docker-compose
-      - apparmor-utils
+      - qemu-guest-agent
     state: present
     update_cache: true
   become: true
@@ -17,17 +15,8 @@
 
 - name: Make sure Docker is running and enabled
   ansible.builtin.systemd:
-    name: docker
+    name: qemu-guest-agent
     daemon_reload: true
     state: started
     enabled: true
-  become: true
-
-- name: Add the user 'docker'
-  ansible.builtin.user:
-    name: docker
-    comment: Docker Apps User
-    create_home: false
-    uid: "{{ docker_uid }}"
-    groups: users,docker
   become: true

@@ -1,0 +1,17 @@
+---
+- name: Proxmox VE 7
+  hosts: rock
+
+  vars:
+    authorized_key_user: desper
+    sudo_user: desper
+    proxmox7_ip: 192.168.51.60
+    proxmox7_host: rock
+
+  roles:
+    - role: authorized-key
+    - role: sudo
+    - role: dropbear-initramfs
+    - role: debian11-firmware
+    - role: proxmox7
+...

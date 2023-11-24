@@ -17,5 +17,4 @@ services:
       - /dev/dri:/dev/dri
     volumes:
       - {{ docker_apps_dir }}/plex/data/config:/config
-      - {{ docker_apps_dir }}/plex/data/transcode:/transcode
       - {{ docker_apps_dir }}/plex/data/media:/data
