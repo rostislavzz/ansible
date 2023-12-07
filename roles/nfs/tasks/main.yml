@@ -1,0 +1,21 @@
+---
+- name: Install NFS client
+  ansible.builtin.apt:
+    name:
+      - nfs-common
+    update_cache: true
+  become: true
+
+- name: Add fstab
+  ansible.builtin.blockinfile:
+    backup: true
+    path: /etc/fstab
+    block: |
+      {{ nfs_mount }}
+  become: true
+
+- name: Create mount job in cron
+  ansible.builtin.cron:
+    name: "Mount NFS on reboot"
+    special_time: reboot
+    job: "mount -a"

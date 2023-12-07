@@ -1,0 +1,18 @@
+---
+- name: LXC Docker Plex
+  hosts: lxc-docker-plex
+
+  vars:
+    docker_apps_dir: /srv/docker
+
+  roles:
+    - role: docker
+    - role: docker-plex
+      vars:
+        plex_claim: claim-WjugPP9CPzxoyykmJUEU
+    - role: nfs
+      vars:
+        nfs_mount: |
+          192.168.51.80:/export/media    {{ docker_apps_dir }}/plex/data/media/media    nfs  defaults  0 0
+          192.168.51.80:/export/torrent  {{ docker_apps_dir }}/plex/data/media/torrent  nfs  defaults  0 0
+...

@@ -1,0 +1,19 @@
+---
+- name: OpenMediaVault 6
+  hosts: openmediavault6
+
+  vars:
+    docker_apps_dir: /srv/docker
+    traefik_domain: omv.home
+
+  roles:
+    - role: authorized-key
+    - role: debian11-intel-vaapi
+    - role: docker
+    - role: docker-traefik
+    - role: docker-sonarr
+    - role: docker-flaresolverr
+    - role: docker-plex
+      vars:
+        plex_version: 1.25.9.5721-965587f64
+...
