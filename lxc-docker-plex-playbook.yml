@@ -4,12 +4,17 @@
 
   vars:
     docker_apps_dir: /srv/docker
+    traefik_domain: omv.home
 
   roles:
     - role: docker
+      vars:
+        docker_apparmor: false
+    - role: docker-traefik
     - role: docker-plex
       vars:
         plex_claim: claim-WjugPP9CPzxoyykmJUEU
+    - role: docker-tautulli
     - role: nfs
       vars:
         nfs_mount: |

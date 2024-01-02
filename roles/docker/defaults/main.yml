@@ -1,1 +1,2 @@
 docker_uid: 1200
+docker_apparmor: true

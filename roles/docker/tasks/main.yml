@@ -9,6 +9,15 @@
     update_cache: true
   become: true
 
+- name: Install apparmor-utils
+  when: docker_apparmor
+  ansible.builtin.apt:
+    name:
+      - apparmor-utils
+    state: present
+    update_cache: true
+  become: true
+
 - name: Autoremove and clean packages
   ansible.builtin.apt:
     autoremove: true

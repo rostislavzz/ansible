@@ -1,19 +1,24 @@
 ---
 - name: OpenMediaVault 6
-  hosts: openmediavault6
+  hosts: omv6
 
   vars:
     docker_apps_dir: /srv/docker
     traefik_domain: omv.home
 
+  pre_tasks:
+    - name: Include vault
+      ansible.builtin.include_vars:
+        file: prod.vault.yml
+
   roles:
     - role: authorized-key
-    - role: debian11-intel-vaapi
     - role: docker
     - role: docker-traefik
     - role: docker-sonarr
+    - role: docker-radarr
+    - role: docker-recyclarr
+    - role: docker-transmission
     - role: docker-flaresolverr
-    - role: docker-plex
-      vars:
-        plex_version: 1.25.9.5721-965587f64
+    - role: docker-jackett
 ...

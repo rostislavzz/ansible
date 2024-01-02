@@ -12,6 +12,5 @@
     - role: authorized-key
     - role: sudo
     - role: dropbear-initramfs
-    - role: debian11-firmware
     - role: proxmox7
 ...

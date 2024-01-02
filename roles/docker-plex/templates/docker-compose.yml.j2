@@ -11,7 +11,9 @@ services:
       - TZ={{ timezone }}
       - PUID={{ docker_uid }}
       - PGID={{ docker_gid }}
+{% if plex_version|length > 1 %}
       - VERSION={{ plex_version }}
+{% endif %}
       - PLEX_CLAIM={{ plex_claim }}
     devices:
       - /dev/dri:/dev/dri

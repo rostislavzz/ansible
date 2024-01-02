@@ -1,0 +1,16 @@
+---
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ docker_apps_dir }}/flaresolverr"
+    state: directory
+    mode: "0755"
+
+- name: Template a 'docker-compose.yml' file
+  ansible.builtin.template:
+    src: ./roles/docker-flaresolverr/templates/docker-compose.yml.j2
+    dest: "{{ docker_apps_dir }}/flaresolverr/docker-compose.yml"
+    mode: "0644"
+
+- name: Start FlareSolverr with docker-compose
+  community.docker.docker_compose:
+    project_src: "{{ docker_apps_dir }}/flaresolverr/"
