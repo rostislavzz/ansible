@@ -1,0 +1,23 @@
+version: "2.1"
+
+services:
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    restart: unless-stopped
+    networks:
+      - {{ traefik_network_name }}
+    environment:
+      - TZ={{ timezone }}
+      - PUID={{ docker_uid }}
+      - PGID={{ docker_gid }}
+    volumes:
+      - {{ docker_apps_dir }}/prowlarr/config:/config
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.prowlarr.rule=Host(`prowlarr.{{ traefik_domain }}`)
+      - traefik.http.services.prowlarr.loadbalancer.server.port=9696
+
+networks:
+  traefik:
+    external: true

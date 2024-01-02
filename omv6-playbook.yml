@@ -17,8 +17,14 @@
     - role: docker-traefik
     - role: docker-sonarr
     - role: docker-radarr
+    - role: docker-prowlarr
     - role: docker-recyclarr
-    - role: docker-transmission
     - role: docker-flaresolverr
+    - role: docker-transmission
     - role: docker-jackett
+    - role: docker-restic
+      vars:
+        restic_repository: s3:s3.us-west-002.backblazeb2.com/docker-apps
+        restic_backup_volumes:
+          - /srv/storage/docker-data/photoprism:/data/photoprism:ro
 ...
