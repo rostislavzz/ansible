@@ -1,0 +1,36 @@
+version: "3.7"
+
+services:
+  kopia:
+    image: kopia/kopia:latest
+    container_name: kopia
+    restart: unless-stopped
+    networks:
+      - {{ traefik_network_name }}
+    command:
+      - server
+      - start
+      - --disable-csrf-token-checks
+      - --insecure
+      - --address=0.0.0.0:51515
+      - --server-username={{ kopia_username }}
+      - --server-password={{ kopia_password }}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.kopia.rule=Host(`kopia.{{ traefik_domain }}`)
+      - traefik.http.services.kopia.loadbalancer.server.port=51515
+    environment:
+      TZ: {{ timezone }}
+      KOPIA_PASSWORD: {{ kopia_password }}
+    volumes:
+      - {{ docker_apps_dir }}/kopia/data/config:/app/config
+      - {{ docker_apps_dir }}/kopia/data/cache:/app/cache
+      - {{ docker_apps_dir }}/kopia/data/logs:/app/logs
+      - {{ docker_apps_dir }}/kopia/data/tmp:/tmp:shared
+      {% for volume in kopia_snapshot_volumes -%}
+        - {{ volume }}
+      {%- endfor %}
+
+networks:
+  {{ traefik_network_name }}:
+    external: true

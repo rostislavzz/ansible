@@ -1,0 +1,16 @@
+---
+- name: Create a Kopia directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ docker_apps_dir }}/kopia"
+    state: directory
+    mode: "0755"
+
+- name: Template a "docker-compose.yml" file
+  ansible.builtin.template:
+    src: templates/docker-compose.yml.j2
+    dest: "{{ docker_apps_dir }}/kopia/docker-compose.yml"
+    mode: "0644"
+
+- name: Start Kopia with docker-compose
+  community.docker.docker_compose:
+    project_src: "{{ docker_apps_dir }}/kopia/"

@@ -1,0 +1,4 @@
+timezone: Europe/Moscow
+kopia_username: admin
+kopia_password:
+kopia_snapshot_volumes:
