@@ -22,9 +22,10 @@
     - role: docker-flaresolverr
     - role: docker-transmission
     - role: docker-jackett
-    - role: docker-restic
+    - role: docker-photoprism-mariadb
+    - role: docker-kopia
       vars:
-        restic_repository: s3:s3.us-west-002.backblazeb2.com/docker-apps
-        restic_backup_volumes:
-          - /srv/storage/docker-data/photoprism:/data/photoprism:ro
+        kopia_password: "{{ password }}"
+        kopia_snapshot_volumes:
+          - "{{ docker_apps_dir }}/photoprism:/data/photoprism:ro"
 ...

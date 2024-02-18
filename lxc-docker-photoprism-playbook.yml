@@ -1,0 +1,22 @@
+---
+- name: LXC Docker Photoprism
+  hosts: lxc-docker-photoprism
+
+  vars:
+    docker_apps_dir: /srv/docker
+    traefik_domain: omv.home
+
+  pre_tasks:
+    - name: Include vault
+      ansible.builtin.include_vars:
+        file: prod.vault.yml
+
+  roles:
+    - role: docker
+      vars:
+        docker_apparmor: false
+    - role: docker-traefik
+    - role: docker-photoprism
+      vars:
+        photoprism_site_url: http://photoprism.omv.home
+...

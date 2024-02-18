@@ -5,6 +5,8 @@ services:
     image: lscr.io/linuxserver/tautulli:latest
     container_name: tautulli
     restart: unless-stopped
+    security_opt:
+      - apparmor:unconfined
     networks:
       - {{ traefik_network_name }}
     ports:
@@ -22,5 +24,5 @@ services:
       - traefik.http.services.tautulli.loadbalancer.server.port=8181
 
 networks:
-  traefik:
+  {{ traefik_network_name }}:
     external: true

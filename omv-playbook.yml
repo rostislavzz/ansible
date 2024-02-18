@@ -13,7 +13,6 @@
 
   roles:
     - role: authorized-key
-    - role: omv-extras
     - role: omv-monitoring-alert
     - role: docker
     - role: docker-traefik
