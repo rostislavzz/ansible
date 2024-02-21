@@ -7,7 +7,7 @@
 
 - name: Template a 'docker-compose.yml' file
   ansible.builtin.template:
-    src: ./roles/docker-traefik/templates/docker-compose.yml.j2
+    src: templates/docker-compose.yml.j2
     dest: "{{ docker_apps_dir }}/traefik/docker-compose.yml"
     mode: "0644"
 

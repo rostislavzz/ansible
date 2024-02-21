@@ -1,4 +1,5 @@
 traefik_domain:
-traefik_acme_email:
+traefik_dasboard: false
+traefik_acme_email: ''
 traefik_network_name: traefik
 traefik_duckdns_token: ''
