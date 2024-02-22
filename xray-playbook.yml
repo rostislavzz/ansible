@@ -1,0 +1,23 @@
+---
+- name: Xray
+  hosts: aeza
+
+  vars:
+    docker_apps_dir: /srv/docker
+    traefik_domain: "{{ duckdns_aeza }}.duckdns.org"
+
+  pre_tasks:
+    - name: Include vault
+      ansible.builtin.include_vars:
+        file: prod.vault.yml
+
+  roles:
+    - role: authorized-key
+    - role: docker
+    - role: docker-traefik
+      vars:
+        traefik_dasboard: false
+        traefik_duckdns_token: "{{ duckdns_token }}"
+        traefik_acme_email: "{{ letsencrypt_email }}"
+    - role: docker-x-ui
+...

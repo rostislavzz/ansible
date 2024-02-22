@@ -21,7 +21,14 @@ services:
       - traefik.http.routers.x-ui.rule=Host(`x-ui.{{ traefik_domain }}`)
       - traefik.http.routers.x-ui.tls=true
       - traefik.http.routers.x-ui.tls.certresolver=myresolver
+      - traefik.http.routers.x-ui.service=x-ui
       - traefik.http.services.x-ui.loadbalancer.server.port=54321
+
+      - traefik.http.routers.sub.rule=Host(`sub.{{ traefik_domain }}`)
+      - traefik.http.routers.sub.tls=true
+      - traefik.http.routers.sub.tls.certresolver=myresolver
+      - traefik.http.routers.sub.service=sub
+      - traefik.http.services.sub.loadbalancer.server.port=2096
 
       - traefik.tcp.routers.x-ui-reality.rule=HostSNI(`yahoo.com`) 
       - traefik.tcp.routers.x-ui-reality.tls.passthrough=true
