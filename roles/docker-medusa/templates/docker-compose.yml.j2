@@ -1,0 +1,24 @@
+version: "2.1"
+
+services:
+  medusa:
+    image: lscr.io/linuxserver/medusa:latest
+    container_name: medusa
+    restart: unless-stopped
+    networks:
+      - {{ traefik_network_name }}
+    environment:
+      - TZ={{ timezone }}
+      - PUID={{ docker_uid }}
+      - PGID={{ docker_gid }}
+    volumes:
+      - {{ docker_apps_dir }}/medusa/data/config:/config
+      - {{ docker_apps_dir }}/medusa/data/downloads:/downloads
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.medusa.rule=Host(`medusa.{{ traefik_domain }}`)
+      - traefik.http.services.medusa.loadbalancer.server.port=8081
+
+networks:
+  {{ traefik_network_name }}:
+    external: true
