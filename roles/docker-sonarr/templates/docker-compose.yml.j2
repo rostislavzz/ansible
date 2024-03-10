@@ -20,5 +20,5 @@ services:
       - traefik.http.services.sonarr.loadbalancer.server.port=8989
 
 networks:
-  traefik:
+  {{ traefik_network_name }}:
     external: true

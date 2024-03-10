@@ -21,7 +21,7 @@ services:
       - traefik.http.services.kopia.loadbalancer.server.port=51515
     environment:
       TZ: {{ timezone }}
-      KOPIA_PASSWORD: {{ kopia_password }}
+      KOPIA_PASSWORD: {{ kopia_repository_password }}
     volumes:
       - {{ docker_apps_dir }}/kopia/data/config:/app/config
       - {{ docker_apps_dir }}/kopia/data/cache:/app/cache

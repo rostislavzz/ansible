@@ -21,11 +21,14 @@
     - role: docker-recyclarr
     - role: docker-flaresolverr
     - role: docker-transmission
+      vars:
+        transmission_pass: "{{ password }}"
     - role: docker-jackett
     - role: docker-photoprism-mariadb
     - role: docker-kopia
       vars:
         kopia_password: "{{ password }}"
+        kopia_repository_password: "{{ kopia_repository_password }}"
         kopia_snapshot_volumes:
           - "{{ docker_apps_dir }}/photoprism:/data/photoprism:ro"
 ...
