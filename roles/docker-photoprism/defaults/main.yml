@@ -1,4 +1,4 @@
-photoprism_admin_user:
+photoprism_admin_user: admin
 photoprism_admin_password:
 photoprism_auth_mode: public
 photoprism_site_url:

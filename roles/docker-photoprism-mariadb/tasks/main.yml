@@ -1,7 +1,7 @@
 ---
-- name: Create a Plex directory if it does not exist
+- name: Create a Photoprism directory if it does not exist
   ansible.builtin.file:
-    path: "{{ docker_apps_dir }}/plex"
+    path: "{{ docker_apps_dir }}/photoprism-mariadb"
     state: directory
     mode: "0755"
 
@@ -17,11 +17,10 @@
 
 - name: Template a "docker-compose.yml" file
   ansible.builtin.template:
-    src: ./roles/docker-plex/templates/docker-compose.yml.j2
-    dest: "{{ docker_apps_dir }}/plex/docker-compose.yml"
+    src: ./roles/docker-photoprism-mariadb/templates/docker-compose.yml.j2
+    dest: "{{ docker_apps_dir }}/photoprism-mariadb/docker-compose.yml"
     mode: "0644"
 
-- name: Start Plex with docker-compose
+- name: Start Photoprism with docker-compose
   community.docker.docker_compose:
-    pull: true
-    project_src: "{{ docker_apps_dir }}/plex/"
+    project_src: "{{ docker_apps_dir }}/photoprism-mariadb/"

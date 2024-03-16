@@ -13,6 +13,7 @@
 
   roles:
     - role: authorized-key
+    - role: omv-monitoring-alert
     - role: docker
     - role: docker-traefik
     - role: docker-sonarr
