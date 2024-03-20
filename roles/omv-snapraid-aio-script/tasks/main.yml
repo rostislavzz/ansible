@@ -1,0 +1,82 @@
+---
+- name: Install packages
+  ansible.builtin.apt:
+    name:
+      - unzip
+    state: present
+    update_cache: true
+  become: true
+
+- name: Autoremove and clean packages
+  ansible.builtin.apt:
+    autoremove: true
+    clean: true
+
+- name: Create a Script directory if it does not exist
+  ansible.builtin.file:
+    path: /usr/sbin/snapraid
+    state: directory
+    mode: "0755"
+
+- name: Download Snapraid AIO Script
+  ansible.builtin.unarchive:
+    src: https://github.com/auanasgheps/snapraid-aio-script/archive/refs/tags/v3.2.zip
+    dest: /usr/sbin/snapraid
+    remote_src: true
+    extra_opts: ['-j']
+
+- name: Give executable rights to the main script
+  ansible.builtin.file:
+    path: /usr/sbin/snapraid/snapraid-aio-script.sh
+    state: file
+    mode: "0755"
+
+- name: Edit the configuration file
+  ansible.builtin.lineinfile:
+    backup: true
+    path: /usr/sbin/snapraid/script-config.sh
+    regexp: '^EMAIL_ADDRESS='
+    line: "EMAIL_ADDRESS=\"{{ omv_snapraid_aio_script_email_address }}\""
+  become: true
+
+- name: Edit the configuration file
+  ansible.builtin.lineinfile:
+    backup: true
+    path: /usr/sbin/snapraid/script-config.sh
+    regexp: '^FROM_EMAIL_ADDRESS='
+    line: "FROM_EMAIL_ADDRESS=\"{{ omv_snapraid_aio_script_from_email_address }}\""
+  become: true
+
+- name: Edit the configuration file
+  ansible.builtin.lineinfile:
+    backup: true
+    path: /usr/sbin/snapraid/script-config.sh
+    regexp: '^UP_THRESHOLD='
+    line: "UP_THRESHOLD={{ omv_snapraid_aio_script_update_threshold }}"
+  become: true
+
+- name: Edit the configuration file
+  ansible.builtin.lineinfile:
+    backup: true
+    path: /usr/sbin/snapraid/script-config.sh
+    regexp: '^MANAGE_SERVICES='
+    line: "MANAGE_SERVICES={{ omv_snapraid_aio_script_manage_services }}"
+  become: true
+
+- name: Edit the configuration file
+  ansible.builtin.lineinfile:
+    backup: true
+    path: /usr/sbin/snapraid/script-config.sh
+    regexp: '^SERVICES='
+    line: "SERVICES='{% for service in omv_snapraid_aio_script_services %}{{ service }}{% if not loop.last %} {% endif %}{% endfor %}'"
+  become: true
+
+# - name: Schedule the script execution
+#   ansible.builtin.cron:
+#     name: "snapraid-aio-script"
+#     minute: "0"
+#     hour: "3"
+#     job: "/usr/sbin/snapraid/snapraid-aio-script.sh"
+#     user: root
+#     disabled: true
+#     cron_file: /var/lib/openmediavault/cron.d/snapraid-aio-script

@@ -14,6 +14,18 @@
   roles:
     - role: authorized-key
     - role: omv-monitoring-alert
+    - role: omv-snapraid-aio-script
+      vars:
+        omv_snapraid_aio_script_email_address: "{{ snapraid_email }}"
+        omv_snapraid_aio_script_from_email_address: "{{ email }}"
+        omv_snapraid_aio_script_update_threshold: 612
+        omv_snapraid_aio_script_services:
+          - sonarr
+          - radarr
+          - prowlarr
+          - recyclarr
+          - transmission
+          - photoprism-mariadb
     - role: docker
     - role: docker-traefik
     - role: docker-sonarr
