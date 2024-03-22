@@ -25,6 +25,13 @@
     group: docker
     mode: "0644"
 
+- name: Copy Recyclarr config
+  ansible.builtin.copy:
+    src: files/config/
+    dest: "{{ docker_apps_dir }}/recyclarr/config/"
+    mode: u=rw,g=r,o=r
+
 - name: Start Recyclarr with docker-compose
   community.docker.docker_compose:
+    pull: true
     project_src: "{{ docker_apps_dir }}/recyclarr/"

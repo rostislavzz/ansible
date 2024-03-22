@@ -2,7 +2,7 @@ version: "2.1"
 
 services:
   recyclarr:
-    image: ghcr.io/recyclarr/recyclarr:4.4
+    image: ghcr.io/recyclarr/recyclarr:6
     container_name: recyclarr
     user: {{ docker_uid }}:{{ docker_gid }}
     restart: unless-stopped
@@ -12,8 +12,8 @@ services:
       - TZ={{ timezone }}
       - RECYCLARR_CREATE_CONFIG=true
     volumes:
-      - {{ docker_apps_dir }}/recyclarr/data/config:/config
+      - {{ docker_apps_dir }}/recyclarr/config:/config
 
 networks:
-  traefik:
+  {{ traefik_network_name }}:
     external: true

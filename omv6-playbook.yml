@@ -18,7 +18,7 @@
       vars:
         omv_snapraid_aio_script_email_address: "{{ snapraid_email }}"
         omv_snapraid_aio_script_from_email_address: "{{ email }}"
-        omv_snapraid_aio_script_update_threshold: 612
+        omv_snapraid_aio_script_update_threshold: 3788
         omv_snapraid_aio_script_services:
           - sonarr
           - radarr
