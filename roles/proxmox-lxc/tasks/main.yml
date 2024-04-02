@@ -1,0 +1,58 @@
+---
+- name: Install Python PIP
+  ansible.builtin.apt:
+    name:
+      - python3-pip
+    update_cache: true
+  become: true
+
+- name: Install proxmoxer python package
+  ansible.builtin.pip:
+    name:
+      - proxmoxer
+
+- name: Create new container
+  community.general.proxmox:
+    api_host: rock
+    api_password: "{{ proxmox_api_password }}"
+    api_token_id: ansible
+    api_token_secret: "{{ proxmox_api_token_secret }}"
+    api_user: root@pam
+    cores: 2
+    disk: 'local:8'
+    features: nesting=1
+    hostname: "{{ proxmox_lxc_hostname }}"
+    memory: 1024
+    netif: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr0"}'
+    node: rock
+    onboot: 1
+    ostemplate: 'local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst'
+    password: "{{ proxmox_password }}"
+    pubkey: "{{ lookup('file', '/Users/rostislav/.ssh/id_rsa.pub') }}"
+    swap: 512
+    unprivileged: false
+  register: container
+
+- name: Add config options
+  ansible.builtin.blockinfile:
+    backup: true
+    path: "/etc/pve/lxc/{{ container.vmid }}.conf"
+    block: |
+      # VAAPI hardware transcoding
+      lxc.cgroup2.devices.allow: c 226:0 rwm
+      lxc.cgroup2.devices.allow: c 226:128 rwm
+      lxc.cgroup2.devices.allow: c 29:0 rwm
+      lxc.mount.entry: /dev/fb0 dev/fb0 none bind,optional,create=file
+      lxc.mount.entry: /dev/dri dev/dri none bind,optional,create=dir
+      lxc.mount.entry: /dev/dri/renderD128 dev/dri/renderD128 none bind,optional,create=file
+  become: true
+
+- name: Start container
+  community.general.proxmox:
+    api_host: rock
+    api_password: "{{ proxmox_api_password }}"
+    api_token_id: ansible
+    api_token_secret: "{{ proxmox_api_token_secret }}"
+    api_user: root@pam
+    state: started
+    vmid: "{{ container.vmid }}"

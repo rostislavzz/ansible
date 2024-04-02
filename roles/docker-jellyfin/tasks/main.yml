@@ -1,0 +1,27 @@
+---
+- name: Create a Jellyfin directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ docker_apps_dir }}/jellyfin"
+    state: directory
+    mode: "0755"
+
+- name: Get docker user info
+  ansible.builtin.user:
+    name: docker
+  register: user
+
+- name: Set variables
+  ansible.builtin.set_fact:
+    docker_uid: "{{ user.uid }}"
+    docker_gid: "{{ user.group }}"
+
+- name: Template a "docker-compose.yml" file
+  ansible.builtin.template:
+    src: templates/docker-compose.yml.j2
+    dest: "{{ docker_apps_dir }}/jellyfin/docker-compose.yml"
+    mode: "0644"
+
+- name: Start Jellyfin with docker-compose
+  community.docker.docker_compose:
+    pull: true
+    project_src: "{{ docker_apps_dir }}/jellyfin/"

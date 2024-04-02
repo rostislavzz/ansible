@@ -2,12 +2,10 @@ version: "3.5"
 
 services:
   photoprism:
-    image: photoprism/photoprism:220901-bullseye
+    image: photoprism/photoprism:latest
     container_name: photoprism
     restart: unless-stopped
     stop_grace_period: 10s
-    depends_on:
-      - photoprism-mariadb
     security_opt:
       - seccomp:unconfined
       - apparmor:unconfined
@@ -20,46 +18,43 @@ services:
       - PHOTOPRISM_SITE_URL={{ photoprism_site_url }}
       - PHOTOPRISM_DISABLE_TLS={{ photoprism_disable_tls }}
       - PHOTOPRISM_DEFAULT_TLS={{ photoprism_default_tls }}
+      - PHOTOPRISM_DISABLE_CHOWN=true
+      - PHOTOPRISM_DETECT_NSFW=true
       - PHOTOPRISM_DATABASE_DRIVER={{ photoprism_database_driver }}
-      - PHOTOPRISM_DATABASE_SERVER=photoprism-mariadb:3306
+      - PHOTOPRISM_DATABASE_SERVER=10.0.0.103:3306
       - PHOTOPRISM_DATABASE_NAME={{ photoprism_database_name }}
       - PHOTOPRISM_DATABASE_USER={{ photoprims_database_user }}
       - PHOTOPRISM_DATABASE_PASSWORD={{ photoprism_database_password }}
-      - PHOTOPRISM_UID={{ docker_uid }}
-      - PHOTOPRISM_GID={{ docker_gid }}
+      - PHOTOPRISM_FFMPEG_ENCODER=intel
     devices:
       - /dev/dri:/dev/dri
     working_dir: "/photoprism"
     volumes:
-      - {{ docker_apps_dir }}/photoprism/originals:/photoprism/originals
-      - {{ docker_apps_dir }}/photoprism/import:/photoprism/import
-      - {{ docker_apps_dir }}/photoprism/storage:/photoprism/storage
+      - photoprism-originals:/photoprism/originals
+      - photoprism-import:/photoprism/import
+      - photoprism-storage:/photoprism/storage
     labels:
       - traefik.enable=true
       - traefik.http.routers.photoprism.rule=Host(`photoprism.{{ traefik_domain }}`)
       - traefik.http.services.photoprism.loadbalancer.server.port=2342
 
-  photoprism-mariadb:
-    image: mariadb:10.11
-    container_name: photoprism-mariadb
-    restart: unless-stopped
-    stop_grace_period: 5s
-    security_opt:
-      - seccomp:unconfined
-      - apparmor:unconfined
-    command: mariadbd --innodb-buffer-pool-size=512M --transaction-isolation=READ-COMMITTED --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=512 --innodb-rollback-on-timeout=OFF --innodb-lock-wait-timeout=120
-    networks:
-      - {{ traefik_network_name }}
-    volumes:
-      - {{ docker_apps_dir }}/photoprism/database:/var/lib/mysql
-    environment:
-      - MARIADB_AUTO_UPGRADE=1
-      - MARIADB_INITDB_SKIP_TZINFO=1
-      - MARIADB_DATABASE={{ photoprism_database_name }}
-      - MARIADB_USER={{ photoprims_database_user }}
-      - MARIADB_PASSWORD={{ photoprism_database_password }}
-      - MARIADB_ROOT_PASSWORD={{ photoprism_database_password }}
-
 networks:
   {{ traefik_network_name }}:
     external: true
+
+volumes:
+  photoprism-originals:
+    driver_opts:
+      type: nfs
+      device: :/photoprism/originals
+      o: addr=10.0.0.103,soft,rw,nfsvers=4
+  photoprism-import:
+    driver_opts:
+      type: nfs
+      device: :/photoprism/import
+      o: addr=10.0.0.103,soft,rw,nfsvers=4
+  photoprism-storage:
+    driver_opts:
+      type: nfs
+      device: :/photoprism/storage
+      o: addr=10.0.0.103,soft,rw,nfsvers=4

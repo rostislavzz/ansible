@@ -1,0 +1,39 @@
+version: "2.1"
+
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+    privileged: true
+    networks:
+      - {{ traefik_network_name }}
+    environment:
+      - TZ={{ timezone }}
+      - PUID={{ docker_uid }}
+      - PGID={{ docker_gid }}
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - jellyfin-config:/config
+      - jellyfin-media:/data/media:ro
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.jellyfin.rule=Host(`jellyfin.{{ traefik_domain }}`)
+      - traefik.http.services.jellyfin.loadbalancer.server.port=8096
+
+networks:
+  {{ traefik_network_name }}:
+    external: true
+
+volumes:
+  jellyfin-config:
+    driver_opts:
+      type: nfs
+      device: :/docker/jellyfin/config
+      o: addr=10.0.0.103,soft,rw,nfsvers=4
+  jellyfin-media:
+    driver_opts:
+      type: nfs
+      device: :/media
+      o: addr=10.0.0.103,soft,ro,nfsvers=4

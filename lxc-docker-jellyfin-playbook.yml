@@ -1,0 +1,14 @@
+---
+- name: LXC Docker Jellyfin
+  hosts: lxc-docker-jellyfin
+
+  vars:
+    docker_apps_dir: /srv/docker
+    traefik_domain: omv.home
+    traefik_network_name: traefik
+
+  roles:
+    - role: docker
+    - role: docker-traefik
+    - role: docker-jellyfin
+...

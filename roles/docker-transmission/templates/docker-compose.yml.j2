@@ -2,7 +2,7 @@ version: "2.1"
 
 services:
   transmission:
-    image: lscr.io/linuxserver/transmission:version-3.00-r8
+    image: lscr.io/linuxserver/transmission:latest
     container_name: transmission
     restart: unless-stopped
     networks:
@@ -26,5 +26,5 @@ services:
       - traefik.http.services.transmission.loadbalancer.server.port=9091
 
 networks:
-  traefik:
+  {{ traefik_network_name }}:
     external: true

@@ -11,12 +11,26 @@ services:
       - TZ={{ timezone }}
       - PUID={{ docker_uid }}
       - PGID={{ docker_gid }}
+      - PLEX_CLAIM={{ plex_claim }}
 {% if plex_version|length > 1 %}
       - VERSION={{ plex_version }}
 {% endif %}
-      - PLEX_CLAIM={{ plex_claim }}
     devices:
       - /dev/dri:/dev/dri
     volumes:
       - {{ docker_apps_dir }}/plex/data/config:/config
       - {{ docker_apps_dir }}/plex/data/media:/data
+      - plex-media:/data/media:ro
+      - plex-torrent:/data/torrent:ro
+
+volumes:
+  plex-media:
+    driver_opts:
+      type: nfs
+      device: :/media
+      o: addr=10.0.0.103,soft,ro,nfsvers=4
+  plex-torrent:
+    driver_opts:
+      type: nfs
+      device: :/torrent
+      o: addr=10.0.0.103,soft,ro,nfsvers=4

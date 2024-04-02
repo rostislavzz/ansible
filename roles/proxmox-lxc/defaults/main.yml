@@ -1,0 +1,4 @@
+proxmox_api_password:
+proxmox_api_token_secret:
+proxmox_password:
+proxmox_lxc_hostname:
