@@ -1,4 +1,8 @@
 docker_apps_dir:
 
+wg_easy_host:
+wg_easy_port: 51820
+wg_easy_password:
+
 traefik_domain:
 traefik_network_name: traefik

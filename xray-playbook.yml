@@ -16,8 +16,7 @@
     - role: docker
     - role: docker-traefik
       vars:
-        traefik_dasboard: false
-        traefik_duckdns_token: "{{ duckdns_token }}"
         traefik_acme_email: "{{ letsencrypt_email }}"
+        traefik_duckdns_token: "{{ duckdns_token }}"
     - role: docker-x-ui
 ...

@@ -1,17 +1,9 @@
 ---
 - name: WireGuard
-  hosts: wireguard
+  hosts: justhost
 
   vars:
-    docker_dir: ~/docker-data
-    duckdns_token:
-    duckdns_subdomain:
-    traefik_domain:
-    traefik_acme_email:
-    traefik_network_name:
-    traefik_duckdns_token:
-    wireguard_host:
-    wireguard_password:
+    docker_apps_dir: /srv/docker
 
   pre_tasks:
     - name: Include vault
@@ -20,7 +12,13 @@
 
   roles:
     - role: docker
-    - role: duckdns
-    - role: traefik
-    - role: wireguard
+    - role: docker-traefik
+      vars:
+        - traefik_domain: "{{ duckdns_justhost }}"
+        - traefik_acme_email: "{{ letsencrypt_email }}"
+        - traefik_duckdns_token: "{{ duckdns_token }}"
+    - role: docker-wg-easy
+      vars:
+        - wg_easy_host: "{{ duckdns_justhost }}"
+        - wg_easy_password: "{{ password }}"
 ...

@@ -1,0 +1,31 @@
+version: "2.1"
+
+services:
+  wg-easy:
+    image: ghcr.io/wg-easy/wg-easy
+    container_name: wg-easy
+    restart: unless-stopped
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv4.ip_forward=1
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    networks:
+      - {{ traefik_network_name }}
+    ports:
+      - {{ wg_easy_port }}:51820/udp
+    environment:
+      - PASSWORD={{ wg_easy_password }}
+      - WG_HOST={{ wg_easy_host }}
+      - WG_PERSISTENT_KEEPALIVE=25
+    volumes:
+      - {{ docker_apps_dir }}/wg-easy/config:/etc/wireguard
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.wg-easy.rule=Host(`wg.{{ traefik_domain }}`)
+      - traefik.http.services.wg-easy.loadbalancer.server.port=51821
+
+networks:
+  {{ traefik_network_name }}:
+    external: true
