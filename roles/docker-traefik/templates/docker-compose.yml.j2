@@ -28,7 +28,11 @@ services:
       - traefik.http.services.dashboard.loadbalancer.server.port=8080
 {% endif %}
     command:
+{% if traefik_debug %}
+      - "--log.level=DEBUG"
+{% else %}
       - "--log.level=INFO"
+{% endif %}
       - "--api.insecure=true"
       - "--api.dashboard=true"
       - "--providers.docker=true"
@@ -44,9 +48,16 @@ services:
       - "--entrypoints.websecure.http.tls.domains[0].sans=*.{{ traefik_domain }}"
       - "--certificatesresolvers.myresolver.acme.email={{ traefik_acme_email }}"
       - "--certificatesresolvers.myresolver.acme.storage=/cert/acme.json"
+{% if traefik_http_challenge %}
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+{% endif %}
+{% if traefik_dns_challenge %}
       - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=duckdns"
       - "--certificatesresolvers.myresolver.acme.dnschallenge.delayBeforeCheck=60"
       - "--certificatesresolvers.myresolver.acme.dnschallenge.disablePropagationCheck=true"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge.resolvers=1.1.1.1:53,8.8.8.8:53"
+{% endif %}
 {% endif %}
 
   whoami:

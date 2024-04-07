@@ -17,7 +17,7 @@ services:
       - {{ wg_easy_port }}:51820/udp
     environment:
       - PASSWORD={{ wg_easy_password }}
-      - WG_HOST={{ wg_easy_host }}
+      - WG_HOST={{ traefik_domain }}
       - WG_PERSISTENT_KEEPALIVE=25
     volumes:
       - {{ docker_apps_dir }}/wg-easy/config:/etc/wireguard

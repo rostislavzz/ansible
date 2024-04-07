@@ -4,6 +4,7 @@
 
   vars:
     docker_apps_dir: /srv/docker
+    traefik_domain: "{{ duckdns_justhost }}"
 
   pre_tasks:
     - name: Include vault
@@ -14,11 +15,11 @@
     - role: docker
     - role: docker-traefik
       vars:
-        - traefik_domain: "{{ duckdns_justhost }}"
         - traefik_acme_email: "{{ letsencrypt_email }}"
         - traefik_duckdns_token: "{{ duckdns_token }}"
+        - traefik_dns_challenge: false
+        - traefik_http_challenge: true
     - role: docker-wg-easy
       vars:
-        - wg_easy_host: "{{ duckdns_justhost }}"
         - wg_easy_password: "{{ password }}"
 ...
