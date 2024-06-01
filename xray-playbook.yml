@@ -18,5 +18,7 @@
       vars:
         traefik_acme_email: "{{ letsencrypt_email }}"
         traefik_duckdns_token: "{{ duckdns_token }}"
+        traefik_dns_challenge: false
+        traefik_http_challenge: true
     - role: docker-x-ui
 ...

@@ -51,6 +51,14 @@
   ansible.builtin.lineinfile:
     backup: true
     path: /usr/sbin/snapraid/script-config.sh
+    regexp: '^DEL_THRESHOLD='
+    line: "DEL_THRESHOLD={{ omv_snapraid_aio_script_delete_threshold }}"
+  become: true
+
+- name: Edit the configuration file
+  ansible.builtin.lineinfile:
+    backup: true
+    path: /usr/sbin/snapraid/script-config.sh
     regexp: '^UP_THRESHOLD='
     line: "UP_THRESHOLD={{ omv_snapraid_aio_script_update_threshold }}"
   become: true
