@@ -40,3 +40,23 @@
     uid: "{{ docker_uid }}"
     groups: users,docker
   become: true
+
+- name: Copy Docker daemon config
+  ansible.builtin.copy:
+    src: files/etc/docker/
+    dest: /etc/docker/
+    mode: u=rw,g=r,o=r
+
+- name: Restart service Docker
+  ansible.builtin.systemd_service:
+    state: restarted
+    daemon_reload: true
+    name: docker
+
+- name: Prune everything
+  community.docker.docker_prune:
+    containers: true
+    images: true
+    networks: true
+    volumes: true
+    builder_cache: true

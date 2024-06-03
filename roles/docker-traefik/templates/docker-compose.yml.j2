@@ -22,8 +22,10 @@ services:
 {% if traefik_dasboard %}
     labels:
       - traefik.enable=true
+{% if (traefik_http_challenge or traefik_dns_challenge) %}
       - traefik.http.routers.dashboard.tls=true
       - traefik.http.routers.dashboard.tls.certresolver=myresolver
+{% endif %}
       - traefik.http.routers.dashboard.rule=Host(`traefik.{{ traefik_domain }}`)
       - traefik.http.services.dashboard.loadbalancer.server.port=8080
 {% endif %}
@@ -70,8 +72,10 @@ services:
       - {{ traefik_network_name }}
     labels:
       - traefik.enable=true
+{% if (traefik_http_challenge or traefik_dns_challenge) %}
       - traefik.http.routers.whoami.tls=true
       - traefik.http.routers.whoami.tls.certresolver=myresolver
+{% endif %}
       - traefik.http.routers.whoami.rule=Host(`whoami.{{ traefik_domain }}`)
 
 networks:

@@ -1,0 +1,32 @@
+---
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ docker_apps_dir }}/archivebox"
+    state: directory
+    mode: "0755"
+
+- name: Get docker user info
+  ansible.builtin.user:
+    name: docker
+  register: user
+
+- name: Set variables
+  ansible.builtin.set_fact:
+    docker_uid: "{{ user.uid }}"
+    docker_gid: "{{ user.group }}"
+
+- name: Template a 'docker-compose.yml' file
+  ansible.builtin.template:
+    src: ./roles/docker-archivebox/templates/docker-compose.yml.j2
+    dest: "{{ docker_apps_dir }}/archivebox/docker-compose.yml"
+    mode: "0644"
+
+- name: Copy Sonic config
+  ansible.builtin.copy:
+    src: files/sonic/
+    dest: "{{ docker_apps_dir }}/archivebox/data/sonic/"
+    mode: u=rw,g=r,o=r
+
+- name: Start ArchiveBox with docker-compose
+  community.docker.docker_compose:
+    project_src: "{{ docker_apps_dir }}/archivebox/"

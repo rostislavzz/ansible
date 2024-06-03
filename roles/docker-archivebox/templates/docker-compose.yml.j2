@@ -1,0 +1,45 @@
+version: "3.5"
+
+services:
+  archivebox:
+    image: archivebox/archivebox:latest
+    container_name: archivebox
+    restart: unless-stopped
+    networks:
+      - {{ traefik_network_name }}
+    volumes:
+      - {{ docker_apps_dir }}/archivebox/data:/data
+    environment:
+      - ADMIN_USERNAME={{ archivebox_user }}
+      - ADMIN_PASSWORD={{ archivebox_pass }}
+      - ALLOWED_HOSTS=*
+      - PUBLIC_INDEX=False
+      - PUBLIC_SNAPSHOTS=False
+      - PUBLIC_ADD_VIEW=False
+      - SEARCH_BACKEND_ENGINE=sonic
+      - SEARCH_BACKEND_HOST_NAME=sonic
+      - SEARCH_BACKEND_PASSWORD=sonic
+      - PUID={{ docker_uid }}
+      - PGID={{ docker_gid }}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.archivebox.rule=Host(`archivebox.{{ traefik_domain }}`)
+      - traefik.http.services.archivebox.loadbalancer.server.port=8000
+
+  archivebox-scheduler:
+    image: archivebox/archivebox:latest
+    container_name: archivebox-scheduler
+    restart: unless-stopped
+    command: schedule --foreground --update --every=day
+    networks:
+      - {{ traefik_network_name }}
+    environment:
+      - TIMEOUT=120
+      - PUID={{ docker_uid }}
+      - PGID={{ docker_gid }}
+    volumes:
+      - {{ docker_apps_dir }}/archivebox/data:/data
+
+networks:
+  {{ traefik_network_name }}:
+    external: true

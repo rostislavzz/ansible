@@ -29,6 +29,10 @@
           - photoprism-mariadb
     - role: docker
     - role: docker-traefik
+      vars:
+        traefik_dasboard: true
+        traefik_dns_challenge: false
+        traefik_http_challenge: false
     - role: docker-sonarr
     - role: docker-radarr
     - role: docker-prowlarr
@@ -45,4 +49,11 @@
         kopia_repository_password: "{{ kopia_repository_password }}"
         kopia_snapshot_volumes:
           - "{{ docker_apps_dir }}/photoprism:/data/photoprism:ro"
+    - role: docker-archivebox
+      vars:
+        archivebox_pass: "{{ password }}"
+    - role: docker-tubearchivist
+      vars:
+        tubearchivist_pass: "{{ password }}"
+        tubearchivist_elasticsearch_pass: "{{ password }}"
 ...

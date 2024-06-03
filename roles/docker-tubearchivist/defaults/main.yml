@@ -1,0 +1,6 @@
+timezone: Europe/Moscow
+traefik_domain:
+traefik_network_name: traefik
+tubearchivist_user: admin
+tubearchivist_pass:
+tubearchivist_elasticsearch_pass:

@@ -1,0 +1,69 @@
+version: "3.5"
+
+services:
+  tubearchivist:
+    image: bbilly1/tubearchivist
+    container_name: tubearchivist
+    restart: unless-stopped
+    networks:
+      - {{ traefik_network_name }}
+    volumes:
+      - {{ docker_apps_dir }}/tubearchivist/data/youtube:/youtube
+      - {{ docker_apps_dir }}/tubearchivist/data/cache:/cache
+    environment:
+      - ES_URL=http://tubearchivist-es:9200
+      - REDIS_HOST=tubearchivist-redis
+      - HOST_UID={{ docker_uid }}
+      - HOST_GID={{ docker_gid }}
+      - TA_HOST=tubearchivist.{{ traefik_domain }}
+      - TA_USERNAME={{ tubearchivist_user }}
+      - TA_PASSWORD={{ tubearchivist_pass }}
+      - ELASTIC_PASSWORD={{ tubearchivist_elasticsearch_pass }}
+      - TZ={{ timezone }}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 2m
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      - tubearchivist-es
+      - tubearchivist-redis
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.tubearchivist.rule=Host(`tubearchivist.{{ traefik_domain }}`)
+      - traefik.http.services.tubearchivist.loadbalancer.server.port=8000
+
+  tubearchivist-redis:
+    image: redis/redis-stack-server
+    container_name: tubearchivist-redis
+    restart: unless-stopped
+    networks:
+      - {{ traefik_network_name }}
+    volumes:
+      - {{ docker_apps_dir }}/tubearchivist/data/redis:/data
+    depends_on:
+      - tubearchivist-es
+
+  tubearchivist-es:
+    image: bbilly1/tubearchivist-es
+    container_name: tubearchivist-es
+    restart: unless-stopped
+    networks:
+      - {{ traefik_network_name }}
+    environment:
+      - "ELASTIC_PASSWORD={{ tubearchivist_elasticsearch_pass }}"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "xpack.security.enabled=true"
+      - "discovery.type=single-node"
+      - "path.repo=/usr/share/elasticsearch/data/snapshot"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - {{ docker_apps_dir }}/tubearchivist/data/elasticsearch:/usr/share/elasticsearch/data
+
+networks:
+  {{ traefik_network_name }}:
+    external: true
