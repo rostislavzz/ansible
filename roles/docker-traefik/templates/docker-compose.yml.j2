@@ -12,9 +12,17 @@ services:
     ports:
       - "80:80"
       - "443:443"
-{% if traefik_duckdns_token|length > 1 %}
+{% if traefik_duckdns_token|length > 1 or traefik_ovh_application_key|length > 1 %}
     environment:
+{% endif %}
+{% if traefik_duckdns_token|length > 1 %}
       - DUCKDNS_TOKEN={{ traefik_duckdns_token }}
+{% endif %}
+{% if traefik_ovh_application_key|length > 1 %}
+      - OVH_ENDPOINT={{ traefik_ovh_endpoint }}
+      - OVH_APPLICATION_KEY={{ traefik_ovh_application_key }}
+      - OVH_APPLICATION_SECRET={{ traefik_ovh_application_secret }}
+      - OVH_CONSUMER_KEY={{ traefik_ovh_consumer_key }}
 {% endif %}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -45,20 +53,25 @@ services:
       - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.websecure.http.tls.certResolver=myresolver"
+      - "--entrypoints.websecure.http.tls.certResolver=letsencrypt"
       - "--entrypoints.websecure.http.tls.domains[0].main={{ traefik_domain }}"
       - "--entrypoints.websecure.http.tls.domains[0].sans=*.{{ traefik_domain }}"
-      - "--certificatesresolvers.myresolver.acme.email={{ traefik_acme_email }}"
-      - "--certificatesresolvers.myresolver.acme.storage=/cert/acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.email={{ traefik_acme_email }}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/cert/acme.json"
 {% if traefik_http_challenge %}
-      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
 {% endif %}
 {% if traefik_dns_challenge %}
-      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=duckdns"
-      - "--certificatesresolvers.myresolver.acme.dnschallenge.delayBeforeCheck=60"
-      - "--certificatesresolvers.myresolver.acme.dnschallenge.disablePropagationCheck=true"
-      - "--certificatesresolvers.myresolver.acme.dnschallenge.resolvers=1.1.1.1:53,8.8.8.8:53"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
+{% if traefik_duckdns_token|length > 1 %}
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=duckdns"
+{% endif %}
+{% if traefik_ovh_application_key|length > 1 %}
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=ovh"
+{% endif %}
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.delayBeforeCheck=60"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.disablePropagationCheck=true"
 {% endif %}
 {% endif %}
 
@@ -74,7 +87,7 @@ services:
       - traefik.enable=true
 {% if (traefik_http_challenge or traefik_dns_challenge) %}
       - traefik.http.routers.whoami.tls=true
-      - traefik.http.routers.whoami.tls.certresolver=myresolver
+      - traefik.http.routers.whoami.tls.certresolver=letsencrypt
 {% endif %}
       - traefik.http.routers.whoami.rule=Host(`whoami.{{ traefik_domain }}`)
 

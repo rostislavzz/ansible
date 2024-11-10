@@ -4,5 +4,9 @@ traefik_dasboard: false
 traefik_acme_email: ''
 traefik_network_name: traefik
 traefik_duckdns_token: ''
+traefik_ovh_endpoint: ovh-eu
+traefik_ovh_application_key: ''
+traefik_ovh_application_secret: ''
+traefik_ovh_consumer_key: ''
 traefik_dns_challenge: true
 traefik_http_challenge: false

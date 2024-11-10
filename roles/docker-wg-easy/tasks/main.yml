@@ -13,4 +13,5 @@
 
 - name: Start WG-Easy with docker-compose
   community.docker.docker_compose:
+    pull: true
     project_src: "{{ docker_apps_dir }}/wg-easy/"

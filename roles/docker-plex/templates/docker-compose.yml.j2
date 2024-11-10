@@ -20,7 +20,7 @@ services:
     volumes:
       - {{ docker_apps_dir }}/plex/data/config:/config
       - {{ docker_apps_dir }}/plex/data/media:/data
-      - plex-media:/data/media:ro
+      - plex-media:/data/media:rw
       - plex-torrent:/data/torrent:ro
 
 volumes:
@@ -28,7 +28,7 @@ volumes:
     driver_opts:
       type: nfs
       device: :/media
-      o: addr=10.0.0.103,soft,ro,nfsvers=4
+      o: addr=10.0.0.103,soft,rw,nfsvers=4
   plex-torrent:
     driver_opts:
       type: nfs
