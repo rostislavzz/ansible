@@ -23,9 +23,11 @@
         omv_snapraid_aio_script_services:
           - sonarr
           - radarr
+          - readarr
           - prowlarr
           - recyclarr
           - transmission
+          - tubearchivist
           - photoprism-mariadb
     - role: docker
     - role: docker-traefik
@@ -56,4 +58,6 @@
       vars:
         tubearchivist_pass: "{{ password }}"
         tubearchivist_elasticsearch_pass: "{{ password }}"
+    - role: docker-kavita
+    - role: docker-readarr
 ...

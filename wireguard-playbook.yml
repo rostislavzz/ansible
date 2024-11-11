@@ -4,7 +4,7 @@
 
   vars:
     docker_apps_dir: /srv/docker
-    traefik_domain: "{{ duckdns_justhost }}"
+    traefik_domain: "{{ ovh_justhost }}"
 
   pre_tasks:
     - name: Include vault
@@ -15,10 +15,13 @@
     - role: docker
     - role: docker-traefik
       vars:
+        - traefik_debug: false
         - traefik_acme_email: "{{ letsencrypt_email }}"
-        - traefik_duckdns_token: "{{ duckdns_token }}"
-        - traefik_dns_challenge: false
-        - traefik_http_challenge: true
+        - traefik_ovh_application_key: "{{ ovh_application_key }}"
+        - traefik_ovh_application_secret: "{{ ovh_application_secret }}"
+        - traefik_ovh_consumer_key: "{{ ovh_consumer_key }}"
+        - traefik_dns_challenge: true
+        - traefik_http_challenge: false
     - role: docker-wg-easy
       vars:
         - wg_easy_password: "{{ password }}"
