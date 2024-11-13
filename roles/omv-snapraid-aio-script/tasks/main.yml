@@ -67,6 +67,14 @@
   ansible.builtin.lineinfile:
     backup: true
     path: /usr/sbin/snapraid/script-config.sh
+    regexp: '^SYNC_WARN_THRESHOLD='
+    line: "SYNC_WARN_THRESHOLD={{ omv_snapraid_aio_script_sync_warning_threshold }}"
+  become: true
+
+- name: Edit the configuration file
+  ansible.builtin.lineinfile:
+    backup: true
+    path: /usr/sbin/snapraid/script-config.sh
     regexp: '^MANAGE_SERVICES='
     line: "MANAGE_SERVICES={{ omv_snapraid_aio_script_manage_services }}"
   become: true

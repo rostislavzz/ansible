@@ -4,3 +4,4 @@ omv_snapraid_aio_script_manage_services: 1
 omv_snapraid_aio_script_services:
 omv_snapraid_aio_script_delete_threshold:
 omv_snapraid_aio_script_update_threshold:
+omv_snapraid_aio_script_sync_warning_threshold:

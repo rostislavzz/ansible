@@ -20,6 +20,7 @@
         omv_snapraid_aio_script_from_email_address: "{{ email }}"
         omv_snapraid_aio_script_delete_threshold: 800
         omv_snapraid_aio_script_update_threshold: 4000
+        omv_snapraid_aio_script_sync_warning_threshold: 7
         omv_snapraid_aio_script_services:
           - sonarr
           - radarr
