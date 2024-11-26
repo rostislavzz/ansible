@@ -1,0 +1,60 @@
+services:
+  immich:
+    image: ghcr.io/imagegenius/immich:latest
+    container_name: immich
+    restart: unless-stopped
+    security_opt:
+      - apparmor:unconfined
+    networks:
+      - {{ traefik_network_name }}
+    environment:
+      - PUID={{ docker_uid }}
+      - PGID={{ docker_gid }}
+      - TZ={{ timezone }}
+      - DB_HOSTNAME={{ immich_database_hostname }}
+      - DB_USERNAME=postgres
+      - DB_PASSWORD={{ immich_database_password }}
+      - DB_DATABASE_NAME=immich
+      - REDIS_HOSTNAME=redis
+      - REDIS_PORT=6379
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - immich-config:/config
+      - immich-photos:/photos
+      - photoprism-originals:/libraries
+    ports:
+      - 8080:8080
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.immich.rule=Host(`immich.{{ traefik_domain }}`)
+      - traefik.http.services.immich.loadbalancer.server.port=8080
+
+  redis:
+    image: redis
+    container_name: redis
+    security_opt:
+      - apparmor:unconfined
+    networks:
+      - {{ traefik_network_name }}
+
+networks:
+  {{ traefik_network_name }}:
+    external: true
+
+volumes:
+  immich-config:
+    driver_opts:
+      type: nfs
+      device: :/immich/config
+      o: addr=10.0.0.103,soft,rw,nfsvers=4
+  immich-photos:
+    driver_opts:
+      type: nfs
+      device: :/immich/photos
+      o: addr=10.0.0.103,soft,rw,nfsvers=4
+  photoprism-originals:
+    driver_opts:
+      type: nfs
+      device: :/photoprism/originals
+      o: addr=10.0.0.103,soft,ro,nfsvers=4

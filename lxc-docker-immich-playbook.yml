@@ -1,6 +1,6 @@
 ---
-- name: LXC Docker Photoprism
-  hosts: lxc-docker-photoprism
+- name: LXC Docker Immich
+  hosts: lxc-docker-immich
 
   vars:
     docker_apps_dir: /srv/docker
@@ -16,9 +16,8 @@
       vars:
         docker_apparmor: false
     - role: docker-traefik
-    - role: docker-photoprism
+    - role: docker-immich
       vars:
-        photoprism_admin_password: "{{ password }}"
-        photoprism_database_password: "{{ photoprism_database_password }}"
-        photoprism_site_url: http://photoprism.home
+        immich_database_hostname: 10.0.0.103
+        immich_database_password: "{{ immich_database_password }}"
 ...

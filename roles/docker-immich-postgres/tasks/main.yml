@@ -1,0 +1,17 @@
+---
+- name: Create a Immich directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ docker_apps_dir }}/immich-postgres"
+    state: directory
+    mode: "0755"
+
+- name: Template a "docker-compose.yml" file
+  ansible.builtin.template:
+    src: templates/docker-compose.yml.j2
+    dest: "{{ docker_apps_dir }}/immich-postgres/docker-compose.yml"
+    mode: "0644"
+
+- name: Start Immich with docker-compose
+  community.docker.docker_compose:
+    pull: true
+    project_src: "{{ docker_apps_dir }}/immich-postgres/"

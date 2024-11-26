@@ -2,3 +2,6 @@ proxmox_api_password:
 proxmox_api_token_secret:
 proxmox_password:
 proxmox_lxc_hostname:
+proxmox_lxc_cores: 2
+proxmox_lxc_memory: 1024
+proxmox_lxc_ostemplate: ubuntu-24.04-standard_24.04-2_amd64.tar.zst

@@ -18,11 +18,11 @@
     api_token_id: ansible
     api_token_secret: "{{ proxmox_api_token_secret }}"
     api_user: root@pam
-    cores: 2
+    cores: "{{ proxmox_lxc_cores }}"
     disk: 'local:8'
     features: nesting=1
     hostname: "{{ proxmox_lxc_hostname }}"
-    memory: 1024
+    memory: "{{ proxmox_lxc_memory }}"
     netif: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr0"}'
     node: rock
     onboot: 1

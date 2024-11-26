@@ -1,7 +1,7 @@
 ---
-- name: Create a Photoprism directory if it does not exist
+- name: Create a Immich directory if it does not exist
   ansible.builtin.file:
-    path: "{{ docker_apps_dir }}/photoprism"
+    path: "{{ docker_apps_dir }}/immich"
     state: directory
     mode: "0755"
 
@@ -17,11 +17,11 @@
 
 - name: Template a "docker-compose.yml" file
   ansible.builtin.template:
-    src: ./roles/docker-photoprism/templates/docker-compose.yml.j2
-    dest: "{{ docker_apps_dir }}/photoprism/docker-compose.yml"
+    src: templates/docker-compose.yml.j2
+    dest: "{{ docker_apps_dir }}/immich/docker-compose.yml"
     mode: "0644"
 
-- name: Start Photoprism with docker-compose
+- name: Start Immich with docker-compose
   community.docker.docker_compose:
     pull: true
-    project_src: "{{ docker_apps_dir }}/photoprism/"
+    project_src: "{{ docker_apps_dir }}/immich/"

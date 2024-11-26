@@ -1,5 +1,5 @@
 ---
-- name: Proxmox VE
+- name: Proxmox LXC
   hosts: rock
 
   pre_tasks:
@@ -11,6 +11,15 @@
     - role: proxmox-lxc
       vars:
         proxmox_lxc_hostname: jellyfin
+        proxmox_lxc_ostemplate: ubuntu-22.04-standard_23.04-1_amd64.tar.zst
+        proxmox_api_password: "{{ password }}"
+        proxmox_api_token_secret: "{{ proxmox_api_token_secret }}"
+        proxmox_password: "{{ password }}"
+    - role: proxmox-lxc
+      vars:
+        proxmox_lxc_hostname: immich
+        proxmox_lxc_cores: 4
+        proxmox_lxc_memory: 6144
         proxmox_api_password: "{{ password }}"
         proxmox_api_token_secret: "{{ proxmox_api_token_secret }}"
         proxmox_password: "{{ password }}"

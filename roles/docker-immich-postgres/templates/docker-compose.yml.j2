@@ -1,0 +1,15 @@
+version: "3.5"
+
+services:
+  postgres14:
+    image: tensorchord/pgvecto-rs:pg14-v0.2.0
+    container_name: postgres14
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: {{ immich_database_password }}
+      POSTGRES_DB: immich
+    volumes:
+      - {{ docker_apps_dir }}/immich-postgres/data:/var/lib/postgresql/data

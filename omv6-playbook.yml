@@ -61,4 +61,7 @@
         tubearchivist_elasticsearch_pass: "{{ password }}"
     - role: docker-kavita
     - role: docker-readarr
+    - role: docker-immich-postgres
+      vars:
+        immich_database_password: "{{ immich_database_password }}"
 ...
