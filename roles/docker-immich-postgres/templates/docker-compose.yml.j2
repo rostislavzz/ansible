@@ -1,9 +1,9 @@
 version: "3.5"
 
 services:
-  postgres14:
+  immich-postgres:
     image: tensorchord/pgvecto-rs:pg14-v0.2.0
-    container_name: postgres14
+    container_name: immich-postgres
     restart: unless-stopped
     ports:
       - 5432:5432
