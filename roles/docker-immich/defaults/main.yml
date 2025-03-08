@@ -1,5 +1,6 @@
+timezone: Europe/Moscow
+immich_domain:
 immich_docker_uid:
 immich_docker_gid: 100
-timezone: Europe/Moscow
 immich_database_hostname:
 immich_database_password:

@@ -43,7 +43,7 @@ ansible-playbook proxmox7-lxc-playbook.yml --ask-vault-pass -vv
 ### Plex
 
 ```
-ansible-playbook lxc-docker-plex-playbook.yml -vv
+docker compose run --rm ansible ansible-galaxy install -r requirements.yml && ansible-playbook lxc-docker-plex-playbook.yml -vv
 ```
 
 Check Intel GPU usage with `intel-gpu-tools` package and `intel_gpu_top` command.

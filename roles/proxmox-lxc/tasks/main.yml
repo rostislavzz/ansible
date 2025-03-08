@@ -13,6 +13,7 @@
 
 - name: Create new container
   community.general.proxmox:
+    node: rock
     api_host: rock
     api_password: "{{ proxmox_api_password }}"
     api_token_id: ansible
@@ -23,8 +24,7 @@
     features: nesting=1
     hostname: "{{ proxmox_lxc_hostname }}"
     memory: "{{ proxmox_lxc_memory }}"
-    netif: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr0"}'
-    node: rock
+    mounts: "{{ proxmox_lxc_mounts | default(omit) }}"
     onboot: 1
     ostemplate: 'local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst'
     password: "{{ proxmox_password }}"
@@ -32,6 +32,22 @@
     swap: 512
     unprivileged: false
   register: container
+
+- name: Add networks to container
+  community.general.proxmox:
+    vmid: "{{ container.vmid }}"
+    node: rock
+    api_host: rock
+    api_password: "{{ proxmox_api_password }}"
+    api_token_id: ansible
+    api_token_secret: "{{ proxmox_api_token_secret }}"
+    api_user: root@pam
+    hostname: "{{ proxmox_lxc_hostname }}"
+    netif:
+      net0: "name=eth0,ip=dhcp,bridge=vmbr0"
+      net1: "name=net1,ip=10.0.0.{{ container.vmid }}/24,bridge=vmbr1"
+      net2: "{{ 'name=vlan2,ip=dhcp,bridge=vmbr0,tag=2' if proxmox_lxc_vlan is defined else omit }}"
+    update: true
 
 - name: Add config options
   ansible.builtin.blockinfile:

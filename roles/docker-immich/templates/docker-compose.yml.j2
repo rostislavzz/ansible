@@ -27,7 +27,7 @@ services:
       - 8080:8080
     labels:
       - traefik.enable=true
-      - traefik.http.routers.immich.rule=Host(`immich.{{ traefik_domain }}`)
+      - traefik.http.routers.immich.rule=Host(`{{ immich_domain }}`)
       - traefik.http.services.immich.loadbalancer.server.port=8080
 
   redis:

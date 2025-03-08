@@ -22,6 +22,6 @@
     mode: "0644"
 
 - name: Start Plex with docker-compose
-  community.docker.docker_compose:
-    pull: true
+  community.docker.docker_compose_v2:
+    pull: always
     project_src: "{{ docker_apps_dir }}/plex/"

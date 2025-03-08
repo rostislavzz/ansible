@@ -4,12 +4,10 @@
 
   vars:
     docker_apps_dir: /srv/docker
-    traefik_domain: omv.home
+    traefik_domain: home
 
   roles:
-    - role: docker
-      vars:
-        docker_apparmor: false
+    - role: geerlingguy.docker
     - role: docker-traefik
     - role: docker-plex
       vars:

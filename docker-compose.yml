@@ -1,0 +1,10 @@
+services:
+  ansible:
+    image: willhallonline/ansible:latest
+    container_name: ansible_container
+    volumes:
+      - ./:/ansible
+      - ~/.ssh/id_rsa:/root/id_rsa
+    stdin_open: true # аналог -it
+    tty: true # аналог -it
+    command: /bin/sh
