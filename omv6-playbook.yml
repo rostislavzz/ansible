@@ -30,6 +30,7 @@
           - transmission
           - tubearchivist
           - photoprism-mariadb
+          - immich-postgres
     - role: docker
     - role: docker-traefik
       vars:

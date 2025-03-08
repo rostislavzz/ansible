@@ -12,12 +12,11 @@
         file: prod.vault.yml
 
   roles:
-    - role: docker
-      vars:
-        docker_apparmor: false
+    - role: geerlingguy.docker
     - role: docker-traefik
     - role: docker-immich
       vars:
+        immich_docker_gid: 100
+        immich_docker_uid: 1200
         immich_database_hostname: 10.0.0.103
         immich_database_password: "{{ immich_database_password }}"
-...

@@ -8,8 +8,8 @@ services:
     networks:
       - {{ traefik_network_name }}
     environment:
-      - PUID={{ docker_uid }}
-      - PGID={{ docker_gid }}
+      - PUID={{ immich_docker_uid }}
+      - PGID={{ immich_docker_gid }}
       - TZ={{ timezone }}
       - DB_HOSTNAME={{ immich_database_hostname }}
       - DB_USERNAME=postgres

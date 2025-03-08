@@ -13,6 +13,6 @@
 
 - name: Start Immich with docker-compose
   community.docker.docker_compose_v2:
-    pull: true
+    pull: always
     remove_orphans: true
     project_src: "{{ docker_apps_dir }}/immich-postgres/"
