@@ -28,5 +28,5 @@
     mode: u=rw,g=r,o=r
 
 - name: Start ArchiveBox with docker-compose
-  community.docker.docker_compose:
+  community.docker.docker_compose_v2:
     project_src: "{{ docker_apps_dir }}/archivebox/"

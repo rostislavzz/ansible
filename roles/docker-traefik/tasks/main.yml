@@ -16,5 +16,5 @@
     name: "{{ traefik_network_name }}"
 
 - name: Start Traefik with docker-compose
-  community.docker.docker_compose:
+  community.docker.docker_compose_v2:
     project_src: "{{ docker_apps_dir }}/traefik/"

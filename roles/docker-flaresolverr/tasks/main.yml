@@ -12,5 +12,5 @@
     mode: "0644"
 
 - name: Start FlareSolverr with docker-compose
-  community.docker.docker_compose:
+  community.docker.docker_compose_v2:
     project_src: "{{ docker_apps_dir }}/flaresolverr/"
